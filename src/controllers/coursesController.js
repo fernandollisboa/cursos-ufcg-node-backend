@@ -7,7 +7,6 @@ import httpStatusCode from '../enum/httpStatusCode';
 export async function getAllNewCourses(req, res, next) {
   try {
     const courses = await coursesService.findAllNewCourses();
-
     return res.status(httpStatusCode.OK).send({ disciplinas: courses });
   } catch (err) {
     next(err);
@@ -16,13 +15,9 @@ export async function getAllNewCourses(req, res, next) {
 
 export async function getCourse(req, res, next) {
   const { courseName } = req.params;
-  const { isOld } = req.query;
 
-  console.log({ isOld });
   try {
-    await verifyCourseExists({ name: courseName, isOld });
     const course = await coursesService.getNewCourse(courseName);
-
     return res.status(httpStatusCode.OK).send({ disciplina: course });
   } catch (err) {
     next(err);
@@ -31,6 +26,7 @@ export async function getCourse(req, res, next) {
 
 export async function getCourseSuccessRate(req, res, next) {
   const { courseName } = req.params;
+
   try {
     const successRate = await coursesService.getSuccessRate(courseName);
     return res.status(httpStatusCode.OK).send({ taxa_de_sucesso: successRate });
@@ -39,13 +35,23 @@ export async function getCourseSuccessRate(req, res, next) {
   }
 }
 
-// TODO isso aqui embaixo pode virar um router middleware facin
-async function verifyCourseExists({ name, isOld = false }) {
-  console.log({ name, isOld });
-  const regex = new RegExp(/^[a-z_]*$/); // TODO isso é trabalho de router
+export async function getCourseSuccessRateMaxAndMinSemester(req, res, next) {
+  const { courseName } = req.params;
+  try {
+    const successRateMaxAndMinSemester = await coursesService.getCourseSuccessRateMaxAndMinSemester(
+      courseName
+    );
+    return res.status(httpStatusCode.OK).send({ semestres: successRateMaxAndMinSemester });
+  } catch (err) {
+    next(err);
+  }
+}
 
-  if (!regex.test(name)) throw new CourseNotFoundError('name', name);
-
-  const doesCourseExists = await coursesService.verifyCourseExists({ name, isOld });
-  if (!doesCourseExists) throw new CourseNotFoundError('name', name);
+export async function getCourseCorrelations(req, res, next) {
+  const { courseName } = req.params;
+  try {
+    const courseCorrelations = await coursesService.getCourseCorrelations(courseName);
+  } catch (err) {
+    next(err);
+  }
 }

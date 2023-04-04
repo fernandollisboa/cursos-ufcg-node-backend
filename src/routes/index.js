@@ -1,19 +1,13 @@
 import { Router } from 'express';
-import {
-  getAllNewCourses,
-  getCourse,
-  getCourseSuccessRate,
-} from '../controllers/coursesController';
-import { getClassesByCourse } from '../controllers/classesController';
 import errorMiddleware from '../middlewares/errorMiddleware';
+import coursesRouter from './coursesRouter';
+import { getAllNewCourses } from '../controllers/coursesController';
 
-const routes = Router();
+const router = Router();
 
-routes.get('/cursos', getAllNewCourses);
-routes.get('/cursos/:courseName', getCourse);
-routes.get('/cursos/:courseName/disciplinas', getClassesByCourse);
-routes.get('/cursos/:courseName/taxa-sucesso', getCourseSuccessRate);
+router.get('/cursos_2015', getAllNewCourses);
+router.use('/', coursesRouter);
 
-routes.use(errorMiddleware);
+router.use(errorMiddleware);
 
-export default routes;
+export default router;

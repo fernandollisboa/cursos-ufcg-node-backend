@@ -5,8 +5,11 @@ export async function getClassesByCourse(req, res, next) {
   const { courseName } = req.params;
   // TODO validar cursoname
   // TODO validar disciplina?
+  try {
+    const classes = await classesServices.findClassesByCourseName(courseName);
 
-  const classes = await classesServices.findClassesByCourseName(courseName);
-
-  return req.send(httpStatusCode.OK, { disciplinas: classes });
+    return res.status(httpStatusCode.OK).json(classes);
+  } catch (err) {
+    next(err);
+  }
 }

@@ -32,7 +32,7 @@ export async function getNewCourse(courseName) {
 }
 
 export async function getCoursePrerequisites(courseName) {
-  const command = `select # from ${courseName}.pre_requisitos`;
+  const command = `SELECT # FROM ${courseName}.pre_requisitos`;
   const columns = ['codigo_disciplina', 'codigo_prerequisito'];
   const queryString = buildQuery({ command, columns });
 
@@ -41,8 +41,17 @@ export async function getCoursePrerequisites(courseName) {
 }
 
 export async function getSuccessRateByCourseName(courseName) {
-  const command = `select # from ${courseName}.aprovacoes`;
+  const command = `SELECT # FROM ${courseName}.aprovacoes`;
   const columns = ['codigo_disciplina', 'aprovados', 'total', 'periodo'];
+  const queryString = buildQuery({ command, columns });
+
+  const { rows } = await client.query(queryString);
+  return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
+}
+
+export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
+  const command = `SELECT # FROM ${courseName}.aprovacoes`;
+  const columns = ['min_periodo', 'max_periodo'];
   const queryString = buildQuery({ command, columns });
 
   const { rows } = await client.query(queryString);
