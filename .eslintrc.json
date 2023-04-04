@@ -1,0 +1,25 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "plugins": ["import", "prettier"],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "eqeqeq": "warn",
+    "no-console": "warn",
+    "import/extensions": ["error", { "js": "ignorePackages" }],
+    "prefer-destructuring": ["warn", { "object": true, "array": true }],
+    "import/newline-after-import": ["warn", { "count": 1 }],
+    "prefer-const": "warn",
+    "no-undef": "warn",
+    "no-unused-vars": "warn",
+    "no-param-reassign": ["error", { "props": true }],
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+  }
+}
