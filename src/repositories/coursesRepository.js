@@ -67,3 +67,19 @@ export async function verifyCourseExists(course) {
   const { rows } = await client.query(queryString, [courseName]);
   return rows.length > 0;
 }
+
+export async function getMaxCourseSemesterFindByIds(ids, courseName) {
+  const command = `select MAX(semestre) from ${courseName}.disciplinas where codigo_disciplina in (${[
+    ...ids,
+  ].join(',')})`;
+  const cols = ['periodo'];
+  const queryString = buildQuery({ command, cols });
+
+  const { rows } = await client.query(queryString);
+
+  console.log({ rows });
+
+  const { periodo } = rows; //TODO verificar se isso ta rolando mermo e trocar pra semester
+
+  return periodo;
+}

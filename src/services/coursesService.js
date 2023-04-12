@@ -21,44 +21,56 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
   return coursesRepository.getCourseSuccessRateMaxAndMinSemester(courseName);
 }
 
-export async function getCourseCorrelations(courseName) {}
+export async function getCourseCorrelations(courseName) {
+  const param = { periodo_inicial: 0.1, periodo_final: 3000.2, schema: `"${courseName}"` };
+  const data = await openCpu('precor', 'calcula_correlacao/json', param).json(); //TODO
 
-// async function correlacao(curso) {
-//   const param = {
-//   periodo_inicial: 0.1,
-//   periodo_final: 3000.2,
-//   schema: "${curso}",
-//   };
+  const disciplinas = [];
+  const correlacoes = [];
 
-//   const data = await open_cpu('precor', 'calcula_correlacao/json', param).json();
+  function createIndexMap() {
+    const indexMap = new Map();
+    var indexCount = 0;
 
-//   const disciplinas = [];
-//   const correlacoes = [];
+    return ({ nome, periodo }) => {
+      if (!indexMap.has(nome)) {
+        disciplinas.push({ nome, periodo });
+        indexMap.set(nome, indexCount);
+        indexCount++;
+      }
+      return indexMap.get(nome);
+    };
+  }
 
-//   const index = {};
-//   index[...] = 0;
+  const getIndex = createIndexMap();
 
-//   function register(d) {
-//   disciplinas.push(d);
-//   index[d.nome] = index[...];
-//   index[...] += 1;
-//   }
+  for (const relation of data) {
+    const disciplinaA = { nome: relation.disciplina_A, periodo: relation.semestre_A };
+    const disciplinaB = { nome: relation.disciplina_B, periodo: relation.semestre_B };
+    correlacoes.push({
+      source: getIndex(disciplinaA),
+      target: getIndex(disciplinaB),
+      valor: relation.correlacao,
+    });
+  }
 
-//   function get_indice(d) {
-//   if (!disciplinas.includes(d)) {
-//   register(d);
-//   }
-//   return index[d.nome];
-//   }
-//   for (const relation of data) {
-//   const disciplina_A = { nome: relation.disciplina_A, periodo: relation.semestre_A };
-//   const disciplina_B = { nome: relation.disciplina_B, periodo: relation.semestre_B };
-//   correlacoes.push({
-//   source: get_indice(disciplina_A),
-//   target: get_indice(disciplina_B),
-//   valor: relation.correlacao,
-//   });
-//   }
+  return { disciplinas, correlacoes };
+}
 
-//   return { disciplinas, correlacoes };
-//   }
+export async function getCourseRecommendations(courseName, history, choices, notTaken) {
+  const semester = coursesRepository.getMaxCourseSemesterFindByIds(
+    [...history, ...choices],
+    courseName
+  );
+
+  const param = {
+    historico_: `c(${history.join(',')})`,
+    disciplinas: `c(${[...choices, ...notTaken].join(',')})`,
+    course_name: `"${courseName}"`,
+    p: semester,
+  };
+
+  const data = await openCpu('recomendacao', 'recomenda/json', param).json(); //TODO
+
+  return data;
+}

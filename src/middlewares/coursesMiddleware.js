@@ -3,7 +3,9 @@ import httpStatusCode from '../enum/httpStatusCode';
 import * as coursesService from '../services/coursesService';
 import coursesArray from '../database/mockCoursesArray';
 
-const courseNameSchema = Joi.string().regex(/^[a-z_]*$/);
+const courseNameSchema = Joi.string()
+  .regex(/^[a-z_]*$/)
+  .required();
 
 export function validateCourseName(req, res, next) {
   const { courseName } = req.params;

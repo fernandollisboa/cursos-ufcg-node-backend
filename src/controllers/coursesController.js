@@ -51,6 +51,8 @@ export async function getCourseCorrelations(req, res, next) {
   const { courseName } = req.params;
   try {
     const courseCorrelations = await coursesService.getCourseCorrelations(courseName);
+
+    return res.status(httpStatusCode.OK).send({ correlacoes: courseCorrelations });
   } catch (err) {
     next(err);
   }
