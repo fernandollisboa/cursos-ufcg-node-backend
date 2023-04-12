@@ -1,5 +1,7 @@
 import app from './app.js';
+import './setup.js';
 
-app.listen(4000, () => {
-	console.log('eae rapaziada');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`eae rapaziada, porta ${port}`);
 });
