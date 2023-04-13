@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  redis:
+    container_name: cursos_api_redis
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+  app:
+    container_name: cursos_api_node
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis

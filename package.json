@@ -5,13 +5,20 @@
   "main": "src/index.js",
   "scripts": {
     "prepare": "husky install",
-    "start": "sucrase-node src/index.js",
+    "start": "npm run redis:run-detached sucrase-node src/index.js",
     "dev": "nodemon src/index.js",
+    "lint": "eslint --fix src",
+    "lint:check": "eslint src",
+    "build": "npm run buisucrase src -d dist --transforms imports",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docker:build": "docker build -t cursos-backend:latest -f ./docker/Dockerfile .",
-    "docker:run": "docker run -p 3001:3000 -it cursos-backend:latest"
+    "docker:build": "docker build -t cursos_api_node:latest -f ./docker/Dockerfile .",
+    "docker:compose": "docker-compose -f ./docker/docker-compose.yml up",
+    "docker:run": "npm run redis:run-detached && docker run -p 3000:3000 -it --rm cursos_api_node",
+    "docker:stop": "docker stop cursos_api_node && docker stop cursos_redis",
+    "redis": "docker run -p 6379:6379 -it --rm redis:alpine",
+    "redis:run-detached": "docker run -p 6379:6379 -d redis:alpine"
   },
-  "author": "",
+  "author": "@fernandollisboa",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
@@ -19,17 +26,15 @@
     "express": "^4.18.2",
     "joi": "^17.9.1",
     "odbc": "^2.4.7",
-    "pg": "^8.10.0"
+    "redis": "^4.6.5"
   },
   "devDependencies": {
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "esm": "^3.2.25",
     "husky": "^8.0.3",
     "nodemon": "^2.0.22",
-    "pg-promise": "^11.4.3",
     "sucrase": "^3.31.0"
   }
 }

@@ -2,7 +2,7 @@
 # Versão: 1.0
 
 # Defina a imagem base
-FROM node:latest
+FROM node:alpine
 
 # Defina o diretório de trabalho do container
 WORKDIR /app

@@ -12,7 +12,7 @@
   },
   "rules": {
     "eqeqeq": "warn",
-    "no-console": "off",
+    "no-console": "warn",
     "import/extensions": ["error", { "js": "ignorePackages" }],
     "prefer-destructuring": ["warn", { "object": true, "array": true }],
     "import/newline-after-import": ["warn", { "count": 1 }],
@@ -26,7 +26,7 @@
     "import/no-useless-path-segments": [
       "error",
       {
-        "noUselessIndex": true
+        "noUselessIndex": false
       }
     ],
     "prettier/prettier": ["error", { "endOfLine": "auto" }]
