@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
 import app from './app.js';
-import './setup.js';
+import { API_PORT } from './setup.js';
 
-const port = process.env.PORT || 3000;
+const port = API_PORT || 3000;
+
 app.listen(port, () => {
-  console.log(`eae rapaziada, porta ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
