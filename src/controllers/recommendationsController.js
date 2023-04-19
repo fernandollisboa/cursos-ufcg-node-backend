@@ -2,7 +2,8 @@ import { getCourseRecommendations } from '../services/coursesService';
 import httpStatusCode from '../enum/httpStatusCode';
 
 export async function getRecommendations(req, res, next) {
-  const { courseName, escolhas, historico, nao_cursei } = req.params;
+  const { courseName } = req.params;
+  const { escolhas, historico, nao_cursei } = req.query;
 
   try {
     const recommendations = await getCourseRecommendations(
@@ -11,7 +12,7 @@ export async function getRecommendations(req, res, next) {
       escolhas,
       nao_cursei
     );
-    return res.status(httpStatusCode.OK).send({ disciplinas: recommendations });
+    return res.status(httpStatusCode.OK).json({ disciplinas: recommendations });
   } catch (err) {
     next(err);
   }

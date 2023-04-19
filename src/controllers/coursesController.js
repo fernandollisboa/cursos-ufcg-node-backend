@@ -7,7 +7,7 @@ import httpStatusCode from '../enum/httpStatusCode';
 export async function getAllNewCourses(req, res, next) {
   try {
     const courses = await coursesService.findAllNewCourses();
-    return res.status(httpStatusCode.OK).send({ disciplinas: courses });
+    return res.status(httpStatusCode.OK).json({ disciplinas: courses });
   } catch (err) {
     next(err);
   }
@@ -18,7 +18,7 @@ export async function getCourse(req, res, next) {
 
   try {
     const course = await coursesService.getNewCourse(courseName);
-    return res.status(httpStatusCode.OK).send({ disciplina: course });
+    return res.status(httpStatusCode.OK).json({ disciplina: course });
   } catch (err) {
     next(err);
   }
@@ -29,7 +29,7 @@ export async function getCourseSuccessRate(req, res, next) {
 
   try {
     const successRate = await coursesService.getSuccessRate(courseName);
-    return res.status(httpStatusCode.OK).send({ taxa_de_sucesso: successRate });
+    return res.status(httpStatusCode.OK).json({ taxa_de_sucesso: successRate });
   } catch (err) {
     next(err);
   }
@@ -41,7 +41,7 @@ export async function getCourseSuccessRateMaxAndMinSemester(req, res, next) {
     const successRateMaxAndMinSemester = await coursesService.getCourseSuccessRateMaxAndMinSemester(
       courseName
     );
-    return res.status(httpStatusCode.OK).send({ semestres: successRateMaxAndMinSemester });
+    return res.status(httpStatusCode.OK).json({ semestres: successRateMaxAndMinSemester });
   } catch (err) {
     next(err);
   }
@@ -52,7 +52,7 @@ export async function getCourseCorrelations(req, res, next) {
   try {
     const courseCorrelations = await coursesService.getCourseCorrelations(courseName);
 
-    return res.status(httpStatusCode.OK).send({ correlacoes: courseCorrelations });
+    return res.status(httpStatusCode.OK).json({ correlacoes: courseCorrelations });
   } catch (err) {
     next(err);
   }
