@@ -8,8 +8,10 @@ import {
 import { getClassesByCourse } from '../controllers/classesController';
 import { verifyCourseExists, validateCourseName } from '../middlewares/coursesMiddleware';
 import { getRecommendations } from '../controllers/recommendationsController';
-import validateParams from '../middlewares/validateParams';
-import recommendationsRouterSchema from '../schemas/recommendationsRouterSchema';
+import validateQueryParams from '../middlewares/validateQueryParams';
+import recommendationsRouteSchema from '../schemas/recommendationsRouteSchema';
+import analysisRouteSchema from '../schemas/analysisRouteSchema';
+import { getCourseAnalysis } from '../controllers/analysisController';
 
 const coursesRouter = Router();
 
@@ -23,8 +25,13 @@ coursesRouter.get('/:courseName/taxa-sucesso/periodos', getCourseSuccessRateMaxA
 coursesRouter.get('/:courseName/correlacao', getCourseCorrelations);
 coursesRouter.get(
   '/:courseName/recomendacao',
-  validateParams(recommendationsRouterSchema),
+  validateQueryParams(recommendationsRouteSchema),
   getRecommendations
+);
+coursesRouter.get(
+  '/:courseName/analise',
+  validateQueryParams(analysisRouteSchema),
+  getCourseAnalysis
 );
 
 export default coursesRouter;

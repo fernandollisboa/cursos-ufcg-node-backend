@@ -1,8 +1,8 @@
 import httpStatusCode from '../enum/httpStatusCode';
 
-export default function validateParams(schema) {
+export default function validateQueryParams(schema) {
   return (req, res, next) => {
-    const { error } = schema.validate(req.params, { abortEarly: false });
+    const { error } = schema.validate(req.query, { abortEarly: false });
 
     if (error) {
       const { details } = error;
@@ -10,7 +10,7 @@ export default function validateParams(schema) {
         message,
         context.label,
       ]);
-      return res.status(httpStatusCode.BAD_REQUEST).send({ message: errorMessages, errorLabels });
+      return res.status(httpStatusCode.BAD_REQUEST).json({ message: errorMessages, errorLabels });
     }
 
     return next();

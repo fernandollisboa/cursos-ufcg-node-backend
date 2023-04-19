@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import errorMiddleware from '../middlewares/errorMiddleware';
-import coursesRouter from './coursesRouter';
-import { getAllNewCourses } from '../controllers/coursesController';
+import errorMiddleware from '../middlewares/errorMiddleware.js';
+import coursesRouter from './coursesRouter.js';
+import { getAllNewCourses } from '../controllers/coursesController.js';
 
 const router = Router();
 

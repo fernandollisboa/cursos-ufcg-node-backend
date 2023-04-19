@@ -14,7 +14,7 @@
     "eqeqeq": "warn",
     "no-console": "warn",
     "import/extensions": ["error", { "js": "ignorePackages" }],
-    "prefer-destructuring": ["warn", { "object": true, "array": true }],
+    "prefer-destructuring": ["warn", { "object": true, "array": false }],
     "import/newline-after-import": ["warn", { "count": 1 }],
     "import/no-duplicates": "warn",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],

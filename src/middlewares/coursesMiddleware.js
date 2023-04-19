@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import httpStatusCode from '../enum/httpStatusCode';
 import * as coursesService from '../services/coursesService';
-import coursesArray from '../database/mockCoursesArray';
 
 const courseNameSchema = Joi.string()
   .regex(/^[a-z_]*$/)
@@ -22,11 +21,11 @@ export async function verifyCourseExists(req, res, next) {
 
   console.log({ courseName });
 
-  const doesCourseExists = coursesArray.includes(courseName);
-  // TODO assim que tiver com bd, mudar pra isso
-  // => await coursesService.verifyCourseExists({ name: courseName });
+  const doesCourseExists = await coursesService.verifyCourseExists({ name: courseName });
   if (!doesCourseExists)
     return res.status(httpStatusCode.NOT_FOUND).json({ message: 'Curso não encontrado' });
 
+  // eslint-disable-next-line no-param-reassign
+  req.locals = { courseSchemaName: courseName };
   next();
 }
