@@ -1,4 +1,11 @@
 import { Router } from 'express';
+
+import { verifyCourseExists, validateCourseName } from '../middlewares/coursesMiddleware';
+import validateQueryParams from '../middlewares/validateQueryParams';
+
+import recommendationsRouteSchema from '../schemas/recommendationsRouteSchema';
+import analysisRouteSchema from '../schemas/analysisRouteSchema';
+
 import {
   getCourse,
   getCourseSuccessRate,
@@ -6,12 +13,9 @@ import {
   getCourseCorrelations,
 } from '../controllers/coursesController';
 import { getClassesByCourse } from '../controllers/classesController';
-import { verifyCourseExists, validateCourseName } from '../middlewares/coursesMiddleware';
 import { getRecommendations } from '../controllers/recommendationsController';
-import validateQueryParams from '../middlewares/validateQueryParams';
-import recommendationsRouteSchema from '../schemas/recommendationsRouteSchema';
-import analysisRouteSchema from '../schemas/analysisRouteSchema';
 import { getCourseAnalysis } from '../controllers/analysisController';
+import { getAllGraduatesByCourse } from '../controllers/graduatesController';
 
 const coursesRouter = Router();
 
@@ -33,5 +37,6 @@ coursesRouter.get(
   validateQueryParams(analysisRouteSchema),
   getCourseAnalysis
 );
+coursesRouter.get('/:courseName/formandos', getAllGraduatesByCourse);
 
 export default coursesRouter;
