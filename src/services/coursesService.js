@@ -57,14 +57,14 @@ export async function getCourseCorrelations(courseName) {
   return { disciplinas, correlacoes };
 }
 
-export async function getCourseRecommendations(courseName, history, choices, notTaken) {
-  const semester = coursesRepository.getMaxCourseSemesterFindByIds(
-    [...history, ...choices],
-    courseName
-  );
+export async function getCourseRecommendations(courseName, academicTranscript, choices, notTaken) {
+  const semester = coursesRepository.getMaxCourseSemesterFindByClassesIds(courseName, [
+    ...academicTranscript,
+    ...choices,
+  ]);
 
   const param = {
-    historico_: `c(${history.join(',')})`,
+    historico_: `c(${academicTranscript.join(',')})`,
     disciplinas: `c(${[...choices, ...notTaken].join(',')})`,
     course_name: `"${courseName}"`,
     p: semester,

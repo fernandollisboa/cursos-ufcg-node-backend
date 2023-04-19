@@ -6,7 +6,7 @@ export async function findAllNewCourses() {
   const columns = ['schema', 'campus', 'nome_comum'];
   const queryString = buildQuery({ command, columns });
 
-  const { rows } = await client.query(queryString);
+  const { rows } = await client.query({ queryString });
   return rows;
 }
 
@@ -25,9 +25,9 @@ export async function getNewCourse(courseName) {
     'vagas_segunda',
     'ato_normativo',
   ];
-  const queryString = buildQuery({ command, columns });
+  const queryString = buildQuery({ command, columns, values: [courseName] });
 
-  const { rows } = await client.query(queryString, [courseName]);
+  const { rows } = await client.query({ queryString });
   return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
 }
 
@@ -36,7 +36,7 @@ export async function getCoursePrerequisites(courseName) {
   const columns = ['codigo_disciplina', 'codigo_prerequisito'];
   const queryString = buildQuery({ command, columns });
 
-  const { rows } = await client.query(queryString);
+  const { rows } = await client.query({ queryString });
   return rows.length > 0 ? rows : []; // TODO lançar errinho se nao achar?
 }
 
@@ -45,7 +45,7 @@ export async function getSuccessRateByCourseName(courseName) {
   const columns = ['codigo_disciplina', 'aprovados', 'total', 'periodo'];
   const queryString = buildQuery({ command, columns });
 
-  const { rows } = await client.query(queryString);
+  const { rows } = await client.query({ queryString });
   return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
 }
 
@@ -54,32 +54,40 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
   const columns = ['min_periodo', 'max_periodo'];
   const queryString = buildQuery({ command, columns });
 
-  const { rows } = await client.query(queryString);
+  const { rows } = await client.query({ queryString });
   return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
 }
 
 export async function verifyCourseExists(course) {
   const { name: courseName, isOld } = course;
-  const queryString = isOld
-    ? `SELECT * FROM Curso WHERE NomeSchema = $1`
-    : `SELECT * FROM preanalytics2015.cursos AS c WHERE c.schema = $1`;
+  const command = isOld
+    ? `SELECT NomeSchema as schema FROM Curso WHERE NomeSchema = '${courseName}'`
+    : `SELECT c.schema FROM preanalytics2015.cursos AS c WHERE c.schema =  '${courseName}'`;
+  const queryString = buildQuery({ command });
 
-  const { rows } = await client.query(queryString, [courseName]);
-  return rows.length > 0;
+  const { count } = await client.query({ queryString });
+  return count > 0;
 }
 
-export async function getMaxCourseSemesterFindByIds(ids, courseName) {
-  const command = `select MAX(semestre) from ${courseName}.disciplinas where codigo_disciplina in (${[
-    ...ids,
-  ].join(',')})`;
-  const cols = ['periodo'];
-  const queryString = buildQuery({ command, cols });
+export async function getMaxCourseSemesterFindByClassesIds(courseSchemaName, classIds) {
+  const command = `select MAX(semestre) AS max_semester from ${courseSchemaName}.disciplinas where codigo_disciplina in (${[
+    ...classIds,
+  ].join(', ')})`;
+  const columns = ['periodo'];
+  const queryString = buildQuery({ command, columns });
 
-  const { rows } = await client.query(queryString);
+  const { max_semester: maxSemester } = await client.query({ queryString, singleRow: true });
 
-  console.log({ rows });
+  return { maxSemester };
+}
 
-  const { periodo } = rows; //TODO verificar se isso ta rolando mermo e trocar pra semester
+export async function getCourseCode(courseSchemaName) {
+  const command = `SELECT codigo_curso FROM preanalytics2015.cursos WHERE schema = $1`;
+  const values = [courseSchemaName];
+  const columns = ['codigo_curso'];
+  const queryString = buildQuery({ command, values });
+  const { rows } = await client.query({ queryString });
 
-  return periodo;
+  console.log(rows, 'rows');
+  return rows[0]['codigo_curso'];
 }
