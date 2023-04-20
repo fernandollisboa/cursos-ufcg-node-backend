@@ -3,14 +3,18 @@ import httpStatusCode from '../enum/httpStatusCode';
 
 export async function getRecommendations(req, res, next) {
   const { courseName } = req.params;
-  const { escolhas, historico, nao_cursei } = req.query;
+  const { disciplinas, historico, nao_cursei } = req.query;
 
   try {
+    const disciplinasParsed = JSON.parse(disciplinas);
+    const historicoParsed = JSON.parse(historico);
+    const naoCurseiParsed = JSON.parse(nao_cursei);
+    //TODO mudar pra uma abordagem mais segura
     const recommendations = await getCourseRecommendations(
       courseName,
-      historico,
-      escolhas,
-      nao_cursei
+      historicoParsed,
+      disciplinasParsed,
+      naoCurseiParsed
     );
     return res.status(httpStatusCode.OK).json({ disciplinas: recommendations });
   } catch (err) {

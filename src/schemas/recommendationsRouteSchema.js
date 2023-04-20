@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 const reccomendationsRouteSchema = Joi.object({
-  escolhas: Joi.string()
+  disciplinas: Joi.string()
     .regex(/\[(\d{7}(,\d{7})*)?]$/)
     .required(),
   historico: Joi.string()

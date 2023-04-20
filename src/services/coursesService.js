@@ -71,7 +71,7 @@ export async function getCourseRecommendations(courseName, academicTranscript, c
     p: semester,
   };
 
-  const data = await openCpu('recomendacao', 'recomenda/json', param).json(); //TODO
+  const data = await openCpu('recomendacao', 'recomenda/json', param); //TODO
 
   return data;
 }
