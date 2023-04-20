@@ -9,9 +9,8 @@ export async function getCourseAnalysis(req, res, next) {
 
   try {
     const academicTranscript = JSON.parse(historico);
-    console.log(academicTranscript);
     const classesChosen = JSON.parse(escolhas);
-    console.log(classesChosen);
+    // TODO mudar essa abordagem acima para uma mais segura
 
     const analysis = await analysisService.getCourseAnalysis(
       courseName,

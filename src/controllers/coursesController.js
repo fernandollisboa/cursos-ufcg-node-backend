@@ -1,5 +1,4 @@
 import * as coursesService from '../services/coursesService';
-import CourseNotFoundError from '../errors/CourseNotFoundError';
 import httpStatusCode from '../enum/httpStatusCode';
 
 /* Baseando-se no apiRest.py (o novo) */

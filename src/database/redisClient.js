@@ -1,21 +1,19 @@
 import { createClient, RedisError } from 'redis';
 
-const EXPIRATION_TIME_MS = 10; //TODO mandar isso no crontrutor
+const EXPIRATION_TIME_MS = 10; //TODO mandar isso no construtor
 class RedisClient {
   constructor() {
     this.client = createClient(); // TODO trocar isso pra conseguir rodar dentro de container
     // TODO criar verificacao e ignorar se o client estiver down
     (async () => this.client.connect())();
-    this.client.on('error', (err) => console.log(err));
+    this.client.on('error', (err) => console.error(err));
     this.client.on('connect', () => console.log('Redis Client Connected'));
   }
 
   async getAndParse(queryString) {
     try {
-      console.log(queryString);
       const cachedValue = await this.client.get(queryString);
 
-      console.log(cachedValue);
       if (!cachedValue || Object.getOwnPropertyNames(cachedValue).length === 0) {
         return null;
       }

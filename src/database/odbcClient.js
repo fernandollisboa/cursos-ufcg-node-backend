@@ -19,23 +19,18 @@ class ObdcClient {
     if (!this.pool) throw new Error('Database connection not established yet.');
 
     const result = await this.pool.query(queryString);
-    console.log(result);
 
     const { count, columns } = result;
     const rows = result.slice(0, count);
-    console.log(rows);
 
     for (let i = 0; i < columns.length; i++) {
-      console.log({ columns });
       // If type is equal BigInt (dataType === -5), convert to Number
       if (columns[i].dataType === -5) {
         rows.forEach((row) => {
           row[columns[i].name] = Number(row[columns[i].name]);
         });
-        // rows[i][columns[i].name] = Number(rows[i][columns[i].name]);
       }
     }
-    console.log({ rows });
     return { rows, count };
   }
 }

@@ -18,11 +18,8 @@ export async function getCourseCompletionPercentage({ courseSchemaName, academic
 }
 
 export async function getEnrollmentFrequency({ courseSchemaName, classesChosen }) {
-  console.log(classesChosen);
-  const classesChosenSorted = classesChosen.sort(); // TODO rever isso
-  console.log(classesChosenSorted);
+  const classesChosenSorted = classesChosen.sort();
   const classesChosenList = `${classesChosenSorted.toString()}`;
-  console.log(classesChosenList);
 
   const command = `
     SELECT COUNT(*) AS frequency FROM (
@@ -60,7 +57,6 @@ export async function getEnrollmentProbability({
     classesChosen
   );
 
-  console.log(maxSemester);
   return { maxSemester };
   //TODO fazer retornar do cpu
   // const param = {
@@ -72,7 +68,6 @@ export async function getEnrollmentProbability({
 
   // const response = await openCpu('redes', 'pegar_prob_da_rede/print', param);
 
-  // console.log('response', response);
   // return parseFloat(response.split(' ')[1]);
 }
 

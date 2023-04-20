@@ -2,7 +2,7 @@ import { client } from '../database';
 import { buildQuery } from '../database/queryBuilder';
 
 export async function findAllNewCourses() {
-  const command = 'SELECT # FROM preanalytics2015.cursos WHERE disponivel=true'; // TODO checar no banco se pode trocar para disponivel IS TRUE
+  const command = 'SELECT # FROM preanalytics2015.cursos WHERE disponivel IS TRUE';
   const columns = ['schema', 'campus', 'nome_comum'];
   const queryString = buildQuery({ command, columns });
 
@@ -28,7 +28,7 @@ export async function getNewCourse(courseSchemaName) {
   const queryString = buildQuery({ command, columns });
 
   const { rows } = await client.query({ queryString });
-  return rows.length > 0 ? rows[0] : null; // TODO mudar pra singleRow
+  return rows.length > 0 ? rows[0] : null;
 }
 
 export async function getCoursePrerequisites(courseName) {
@@ -37,7 +37,7 @@ export async function getCoursePrerequisites(courseName) {
   const queryString = buildQuery({ command, columns });
 
   const { rows } = await client.query({ queryString });
-  return rows.length > 0 ? rows : []; // TODO lançar errinho se nao achar?
+  return rows.length > 0 ? rows : null;
 }
 
 export async function getSuccessRateByCourseName(courseName) {
@@ -55,9 +55,8 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
     FROM ${courseName}.aprovacoes`;
   const queryString = buildQuery({ command });
 
-  console.log(queryString);
   const { rows } = await client.query({ queryString });
-  return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
+  return rows.length > 0 ? rows[0] : null;
 }
 
 export async function verifyCourseExists(course) {
@@ -90,6 +89,5 @@ export async function getCourseCode(courseSchemaName) {
   const queryString = buildQuery({ command, values });
   const { rows } = await client.query({ queryString });
 
-  console.log(rows, 'rows');
   return rows[0]['codigo_curso'];
 }

@@ -6,11 +6,10 @@ export default async function openCpu(_package, method, params) {
   //   method: 'POST',
   //   body: params,
   // });
-  // console.log('response', response);
 
   // if (!response.ok) {
   //   throw new Error('Error with R Server');
   // }
 
-  // return response.text(); // TODO sera que json ne meió?
+  // return response.text();
 }

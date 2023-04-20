@@ -5,7 +5,7 @@ export function buildQuery({ command, columns = [], values = [] }) {
 
   // for (let i = 0; i < values.length; i++) {
   //   queryString = queryString.replace(`${i + 1}`, `'${values[i]}'`);
-  // } // TODO ver se isso eh mesmo necessario
+  // } // TODO modificar isso para pegar as variaveis do comando e substituir pelos valores
 
   return queryString;
 }
