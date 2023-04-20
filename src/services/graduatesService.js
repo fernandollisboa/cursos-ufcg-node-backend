@@ -1,5 +1,5 @@
 import * as graduatesRepository from '../repositories/graduatesRepository';
 
-export async function getAllGraduatesByCourse({ courseSchemaName }) {
+export async function getAllCourseGraduates({ courseSchemaName }) {
   return graduatesRepository.findByCourseName(courseSchemaName);
 }

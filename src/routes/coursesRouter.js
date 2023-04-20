@@ -15,7 +15,8 @@ import {
 import { getClassesByCourse } from '../controllers/classesController';
 import { getRecommendations } from '../controllers/recommendationsController';
 import { getCourseAnalysis } from '../controllers/analysisController';
-import { getAllGraduatesByCourse } from '../controllers/graduatesController';
+import { getCourseGraduatesBySemester } from '../controllers/graduatesController';
+import { getStatisticsByCourse } from '../controllers/statisticsController.js';
 
 const coursesRouter = Router();
 
@@ -37,6 +38,7 @@ coursesRouter.get(
   validateQueryParams(analysisRouteSchema),
   getCourseAnalysis
 );
-coursesRouter.get('/:courseName/formandos', getAllGraduatesByCourse);
+coursesRouter.get('/:courseName/formandos', getCourseGraduatesBySemester);
+coursesRouter.get('/:courseName/estatisticas', getStatisticsByCourse);
 
 export default coursesRouter;

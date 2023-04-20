@@ -13,7 +13,6 @@ export async function findClassesByCourseName(courseName) {
     'creditos',
   ];
   const queryString = buildQuery({ command, columns });
-
-  const { rows } = await client.query(queryString); // TODO lançar errinho se nao achar?
+  const { rows } = await client.query({ queryString }); // TODO lançar errinho se nao achar?
   return rows;
 }
