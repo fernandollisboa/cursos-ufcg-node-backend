@@ -1,4 +1,5 @@
 import * as coursesRepository from '../repositories/coursesRepository';
+import openCpu from '../utils/openCpu';
 
 export async function findAllNewCourses() {
   return coursesRepository.findAllNewCourses();
@@ -23,7 +24,7 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
 
 export async function getCourseCorrelations(courseName) {
   const param = { periodo_inicial: 0.1, periodo_final: 3000.2, schema: `"${courseName}"` };
-  const data = await openCpu('precor', 'calcula_correlacao/json', param).json(); //TODO
+  const data = await openCpu('precor', 'calcula_correlacao/json', param); //TODO
 
   const disciplinas = [];
   const correlacoes = [];

@@ -10,8 +10,8 @@ export async function findAllNewCourses() {
   return rows;
 }
 
-export async function getNewCourse(courseName) {
-  const command = `SELECT # FROM preanalytics2015.cursos AS c WHERE c.schema = $1`;
+export async function getNewCourse(courseSchemaName) {
+  const command = `SELECT # FROM preanalytics2015.cursos AS c WHERE c.schema = '${courseSchemaName}'`;
   const columns = [
     'codigo_curso',
     'curso',
@@ -25,10 +25,10 @@ export async function getNewCourse(courseName) {
     'vagas_segunda',
     'ato_normativo',
   ];
-  const queryString = buildQuery({ command, columns, values: [courseName] });
+  const queryString = buildQuery({ command, columns });
 
   const { rows } = await client.query({ queryString });
-  return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
+  return rows.length > 0 ? rows[0] : null; // TODO mudar pra singleRow
 }
 
 export async function getCoursePrerequisites(courseName) {
@@ -46,21 +46,23 @@ export async function getSuccessRateByCourseName(courseName) {
   const queryString = buildQuery({ command, columns });
 
   const { rows } = await client.query({ queryString });
-  return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
+  return rows.length > 0 ? rows : [];
 }
 
 export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
-  const command = `SELECT # FROM ${courseName}.aprovacoes`;
-  const columns = ['min_periodo', 'max_periodo'];
-  const queryString = buildQuery({ command, columns });
+  const command = `
+    SELECT min(periodo) AS min_periodo, max(periodo) AS max_periodo 
+    FROM ${courseName}.aprovacoes`;
+  const queryString = buildQuery({ command });
 
+  console.log(queryString);
   const { rows } = await client.query({ queryString });
   return rows.length > 0 ? rows[0] : null; // TODO lançar errinho se nao achar?
 }
 
 export async function verifyCourseExists(course) {
   const { name: courseName, isOld } = course;
-  const command = isOld
+  const command = isOld // TODO remover se nao precisar traduzir o oldApi
     ? `SELECT NomeSchema as schema FROM Curso WHERE NomeSchema = '${courseName}'`
     : `SELECT c.schema FROM preanalytics2015.cursos AS c WHERE c.schema =  '${courseName}'`;
   const queryString = buildQuery({ command });
