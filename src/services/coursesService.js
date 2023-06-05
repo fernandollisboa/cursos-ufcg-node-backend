@@ -24,51 +24,65 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
 
 export async function getCourseCorrelations(courseName) {
   const param = { periodo_inicial: 0.1, periodo_final: 3000.2, schema: `"${courseName}"` };
-  const data = await openCpu('precor', 'calcula_correlacao/json', param); //TODO
-
-  const disciplinas = [];
+  const correlations = await openCpu('precor', 'calcula_correlacao/json', param); //TODO criar uma funcao pra R
+  const courses = [];
   const correlacoes = [];
 
-  function createIndexMap() {
-    const indexMap = new Map();
-    var indexCount = 0;
+  function createCorrelationsPrerequisitesIndex() {
+    const courseIndexMap = new Map();
+    let courseIndexCount = 0;
 
-    return ({ nome, periodo }) => {
-      if (!indexMap.has(nome)) {
-        disciplinas.push({ nome, periodo });
-        indexMap.set(nome, indexCount);
-        indexCount++;
+    return (course) => {
+      const { nome: courseName, periodo: semester } = course;
+
+      if (!courseIndexMap.has(courseName)) {
+        courses.push({ nome: courseName, periodo: semester });
+        courseIndexMap.set(courseName, courseIndexCount);
+        courseIndexCount++;
       }
-      return indexMap.get(nome);
+
+      return courseIndexMap.get(courseName);
     };
   }
 
-  const getIndex = createIndexMap();
+  function buildPrerequisitesObjectFromCorrelations(correlations) {
+    const getFromIndex = createCorrelationsPrerequisitesIndex();
 
-  for (const relation of data) {
-    const disciplinaA = { nome: relation.disciplina_A, periodo: relation.semestre_A };
-    const disciplinaB = { nome: relation.disciplina_B, periodo: relation.semestre_B };
-    correlacoes.push({
-      source: getIndex(disciplinaA),
-      target: getIndex(disciplinaB),
-      valor: relation.correlacao,
-    });
+    for (const relation of correlations) {
+      const { disciplina_A, semestre_A, disciplina_B, semestre_B } = relation;
+
+      const disciplinaA = { nome: disciplina_A, periodo: semestre_A };
+      const disciplinaB = { nome: disciplina_B, periodo: semestre_B };
+
+      correlacoes.push({
+        source: getFromIndex(disciplinaA),
+        target: getFromIndex(disciplinaB),
+        valor: relation.correlacao,
+      });
+    }
   }
 
-  return { disciplinas, correlacoes };
+  buildPrerequisitesObjectFromCorrelations(correlations);
+
+  return { disciplinas: courses, correlacoes: correlacoes }; //TODO isso deveria ta em portugues so no controller
 }
 
 export async function getCourseRecommendations(courseName, academicTranscript, choices, notTaken) {
-  const semester = coursesRepository.getMaxCourseSemesterFindByClassesIds(courseName, [
+  const { maxSemester } = await coursesRepository.getMaxCourseSemesterFindByClassesIds(courseName, [
     ...academicTranscript,
     ...choices,
   ]);
 
+  console.log('maxSemester', maxSemester);
+
+  const historico = academicTranscript.join(',');
+  const disciplinas = [...choices, ...notTaken].join(',');
+
   const param = {
-    historico_: `c(${academicTranscript.join(',')})`,
-    disciplinas: `c(${[...choices, ...notTaken].join(',')})`,
+    historico_: `c(${historico})`,
+    disciplinas: `c(${disciplinas})`,
     course_name: `"${courseName}"`,
-    p: semester,
+    p: Number(maxSemester).toPrecision(3),
   };
 
   const data = await openCpu('recomendacao', 'recomenda/json', param); //TODO

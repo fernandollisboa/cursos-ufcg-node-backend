@@ -16,7 +16,7 @@ export async function getRecommendations(req, res, next) {
       disciplinasParsed,
       naoCurseiParsed
     );
-    return res.status(httpStatusCode.OK).json({ disciplinas: recommendations });
+    return res.status(httpStatusCode.OK).json(recommendations);
   } catch (err) {
     next(err);
   }

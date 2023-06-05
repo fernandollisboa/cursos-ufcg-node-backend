@@ -1,12 +1,10 @@
 import * as coursesService from '../services/coursesService';
 import httpStatusCode from '../enum/httpStatusCode';
 
-/* Baseando-se no apiRest.py (o novo) */
-
 export async function getAllNewCourses(req, res, next) {
   try {
     const courses = await coursesService.findAllNewCourses();
-    return res.status(httpStatusCode.OK).json({ courses });
+    return res.status(httpStatusCode.OK).json(courses);
   } catch (err) {
     next(err);
   }
@@ -50,8 +48,9 @@ export async function getCourseCorrelations(req, res, next) {
   const { courseName } = req.params;
   try {
     const courseCorrelations = await coursesService.getCourseCorrelations(courseName);
+    console.log('courseCorrelations', courseCorrelations);
 
-    return res.status(httpStatusCode.OK).json({ correlacoes: courseCorrelations });
+    return res.status(httpStatusCode.OK).json(courseCorrelations);
   } catch (err) {
     next(err);
   }

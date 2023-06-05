@@ -3,6 +3,8 @@ services:
   redis:
     container_name: cursos_api_redis
     image: redis:alpine
+    networks:
+      - my-network  
     ports:
       - '6379:6379'
   app:
@@ -10,7 +12,14 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
+    environment:
+      REDIS_HOST: redis
     ports:
-      - '3000:3000'
+      - '3000:3000' 
     depends_on:
       - redis
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge

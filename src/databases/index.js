@@ -17,18 +17,20 @@ async function query({ queryString, singleRow = false }) {
     return singleRow ? result.rows[0] : result;
   } catch (err) {
     let result;
+    const { odbcErrors } = err;
 
-    console.log('err', { err });
-    if (err['odbcErrors']) result = { rows: [], count: 0 };
-    else if (err instanceof RedisError) {
+    if (odbcErrors) {
+      console.error('Error querying database: ', { odbcErrors, queryString });
+      console.error('Returning empty result...');
+      result = { rows: [], count: 0 };
+      odbcClient.connect();
+      console.log(err);
+    } else if (err instanceof RedisError) {
       console.error('Error querying Redis: ', { err, queryString });
       console.error('Querying database instead...');
       result = odbcClient.getFromDatabase(queryString);
-    } else {
-      console.error('Error querying database: ', { err, queryString });
-      console.error('Returning empty result...');
-      result = { rows: [], count: 0 };
     }
+
     return singleRow ? result.rows[0] : result;
   }
 }

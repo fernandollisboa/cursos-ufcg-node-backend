@@ -1,12 +1,13 @@
-import { createClient, RedisError } from 'redis';
+import { createClient } from 'redis';
+import { REDIS_HOST } from '../setup';
 
 const EXPIRATION_TIME_MS = 10; //TODO mandar isso no construtor
 class RedisClient {
   constructor() {
-    this.client = createClient(); // TODO trocar isso pra conseguir rodar dentro de container
+    const socket = { host: REDIS_HOST || 'localhost', port: 6379 };
+    this.client = createClient({ socket });
     // TODO criar verificacao e ignorar se o client estiver down
     (async () => this.client.connect())();
-    this.client.on('error', (err) => console.error(err));
     this.client.on('connect', () => console.log('Redis Client Connected'));
   }
 
@@ -27,7 +28,7 @@ class RedisClient {
   }
 
   setAndStrigify(queryString, result) {
-    this.client.setEx(queryString, 1000, JSON.stringify(result));
+    this.client.setEx(queryString, EXPIRATION_TIME_MS, JSON.stringify(result));
   }
 
   delete(key) {

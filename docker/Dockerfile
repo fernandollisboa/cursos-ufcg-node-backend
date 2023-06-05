@@ -1,23 +1,23 @@
-# Data: 2023-04-07
-# Versão: 1.0
+# Date: 2023-04-07
+# Version: 1.0
 
-# Defina a imagem base
-FROM node:alpine
+# Set the base image
+FROM node:18
 
-# Defina o diretório de trabalho do container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copie o arquivo package.json para o diretório de trabalho do container
+# Copy the package.json file to the working directory inside the container
 COPY package.json .
 
-# Defina as variáveis de ambiente
+# Set the environment variables
 ENV ACCEPT_EULA=Y
 
-# Instale as dependências do sistema operacional
+# Install system dependencies
 RUN apt-get update -y && apt-get update \
   && apt-get install -y --no-install-recommends curl gcc g++ gnupg unixodbc-dev
 
-# Instale o driver ODBC do MySQL
+# Install MySQL ODBC driver
 ADD https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc-8.0.26-linux-glibc2.12-x86-64bit.tar.gz .
 RUN tar -C . -xzvf mysql-connector-odbc-8.0.26-linux-glibc2.12-x86-64bit.tar.gz
 RUN cd mysql-connector-odbc-8.0.26-linux-glibc2.12-x86-64bit \
@@ -26,14 +26,14 @@ RUN cd mysql-connector-odbc-8.0.26-linux-glibc2.12-x86-64bit \
   && myodbc-installer -a -d -n "MySQL ODBC 8.0 Driver" -t "Driver=/usr/local/lib/libmyodbc8w.so" \
   && myodbc-installer -a -d -n "MySQL ODBC 8.0" -t "Driver=/usr/local/lib/libmyodbc8a.so"
 
-# Instale as dependências do Node.js
+# Install Node.js dependencies
 RUN npm install
 
-# Copie o resto do código para o diretório de trabalho do container
+# Copy the rest of the code to the working directory inside the container
 COPY . .
 
-# Defina a porta que o aplicativo será exposto
-EXPOSE 8080
+# Set the port that the application will be exposed on
+EXPOSE 3000
 
-# Defina o comando padrão que será executado quando o container for iniciado
+# Set the default command to be executed when the container is started
 CMD ["npm", "run", "dev"]

@@ -3,6 +3,25 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const { DB_DRIVER, DB_SERVER, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, API_PORT } = process.env;
+const { env } = process;
+const {
+  DB_DRIVER,
+  DB_SERVER,
+  DB_PORT,
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
+  R_SERVER_PORT,
+  R_SERVER_URI,
+} = env;
 
-export { DB_DRIVER, DB_SERVER, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, API_PORT };
+export {
+  DB_DRIVER,
+  DB_SERVER,
+  DB_PORT,
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
+  R_SERVER_PORT,
+  R_SERVER_URI,
+};

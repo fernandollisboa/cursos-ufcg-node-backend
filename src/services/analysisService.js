@@ -1,31 +1,30 @@
 import {
-  getCourseCompletionPercentage,
+  getCourseCompletionPercentageByTranscpript,
   getEnrollmentFrequency,
   getEnrollmentProbability,
   getClassesFailingRisk,
 } from '../repositories/analysisRepository';
 
-export async function getCourseAnalysis(courseName, academicTranscript, classesChosen) {
-  const completionPercentage = await getCourseCompletionPercentage({
-    courseSchemaName: courseName,
+export async function getCourseAnalysis(courseSchemaName, academicTranscript, classesChosen) {
+  const completionPercentage = await getCourseCompletionPercentageByTranscpript({
+    courseSchemaName,
     academicTranscript,
   });
   const enrollmentFrequency = await getEnrollmentFrequency({
-    courseSchemaName: courseName,
+    courseSchemaName,
     classesChosen,
   });
-  const enrollmentProbability = await getEnrollmentProbability({
-    courseSchemaName: courseName,
-    classesChosen,
-    academicTranscript,
-  });
+  // const enrollmentProbability = await getEnrollmentProbability({
+  //   courseSchemaName,
+  //   classesChosen,
+  //   academicTranscript,
+  // });
 
-  const failingRisk = await getClassesFailingRisk({ courseSchemaName: courseName, classesChosen });
+  const failingRisk = await getClassesFailingRisk({ courseSchemaName, classesChosen });
 
   return {
     taxa_complecao: completionPercentage,
     frequencia_matricula: enrollmentFrequency,
-    probabilidade_matricula: enrollmentProbability,
     risco_reprovacao: failingRisk,
   };
 }

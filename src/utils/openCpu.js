@@ -1,15 +1,17 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
+import { R_SERVER_PORT, R_SERVER_URI } from '../setup';
 
 export default async function openCpu(_package, method, params) {
-  return 'still testing';
-  // const response = await fetch(`http://pre-ocpu/ocpu/library/${_package}/R/${method}`, {
-  //   method: 'POST',
-  //   body: params,
-  // });
+  const url = `${R_SERVER_URI}:${R_SERVER_PORT}/ocpu/library/${_package}/R/${method}`;
 
-  // if (!response.ok) {
-  //   throw new Error('Error with R Server');
-  // }
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Cache-Control': 'max-age=86400',
+    },
+  };
 
-  // return response.text();
+  const response = await axios.post(url, params, config);
+
+  return response.data;
 }

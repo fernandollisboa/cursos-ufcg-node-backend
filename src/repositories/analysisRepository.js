@@ -1,13 +1,17 @@
-import { client } from '../database';
-import { buildQuery } from '../database/queryBuilder';
+import { client } from '../databases';
+import { buildQuery } from '../databases/queryBuilder';
 import openCpu from '../utils/openCpu';
 import { getMaxCourseSemesterFindByClassesIds } from './coursesRepository';
 
-export async function getCourseCompletionPercentage({ courseSchemaName, academicTranscript }) {
+export async function getCourseCompletionPercentageByTranscpript({
+  courseSchemaName,
+  academicTranscript,
+}) {
   const command = `
     SELECT COUNT(*) AS qtd_disciplinas 
     FROM ${courseSchemaName}.disciplinas AS disc 
     WHERE disc.tipo IN ('Obrigatoria', 'Complementar')`;
+
   const queryString = buildQuery({ command });
   const { rows } = await client.query({ queryString });
 
@@ -19,7 +23,7 @@ export async function getCourseCompletionPercentage({ courseSchemaName, academic
 
 export async function getEnrollmentFrequency({ courseSchemaName, classesChosen }) {
   const classesChosenSorted = classesChosen.sort();
-  const classesChosenList = `${classesChosenSorted.toString()}`;
+  const classesChosenList = `${classesChosenSorted.toString()}`; //TODO mudar isso aquê
 
   const command = `
     SELECT COUNT(*) AS frequency FROM (
@@ -50,27 +54,26 @@ export async function getEnrollmentProbability({
   // Cursos válidos para o cálculo da probabilidade de matrícula
   const validCoursesSchemas = ['engenharia_eletrica_cg', 'ciencia_da_computacao_d_cg'];
   if (!validCoursesSchemas.includes(courseSchemaName)) {
-    return {};
+    return null;
   }
   const { maxSemester } = await getMaxCourseSemesterFindByClassesIds(
     courseSchemaName,
     classesChosen
   );
 
-  return { maxSemester };
-  //TODO fazer retornar do cpu
-  // const param = {
-  //   historico_: `c(${academicTranscript.toString()})`,
-  //   matricula_atual_: `c(${classesChosen.toString()})`,
-  //   course_name: `"${courseSchemaName}"`,
-  //   p: term,
-  // };
+  const param = {
+    historico_: `c(${academicTranscript.toString()})`,
+    matricula_atual_: `c(${classesChosen.toString()})`,
+    course_name: `"${courseSchemaName}"`,
+    p: maxSemester,
+  };
 
-  // const response = await openCpu('redes', 'pegar_prob_da_rede/print', param);
-
-  // return parseFloat(response.split(' ')[1]);
+  const response = await openCpu('redes', 'pegar_prob_da_rede/print', param);
+  console.log('eae rapaz');
+  return parseFloat(response.split(' ')[1]);
 }
 
+// TODO isso ta feio d+++ e deveria nao estar aqui em repository e sim um R services
 export async function getClassesFailingRisk({ courseSchemaName, classesChosen }) {
   const command1 = `SELECT codigo_curso FROM preanalytics2015.cursos WHERE \`schema\` = '${courseSchemaName}'`;
   const { codigo_curso } = await client.query({ queryString: command1, singleRow: true });
@@ -90,14 +93,19 @@ export async function getClassesFailingRisk({ courseSchemaName, classesChosen })
 
   const names = [...classesCodes, 'n_disc', 'media_set', 'cra'].join(',');
   const values = [
-    ...classesCodes.map((d) => classesChosen.includes(d)),
+    ...classesCodes.map((d) => (classesChosen.includes(d) ? 'TRUE' : 'FALSE')),
     n_disc,
     media_set,
     cra,
   ].join(',');
-  const param = { names: names, values: values, course_name: courseSchemaName };
+
+  const param = {
+    names: `"${names}"`,
+    values: `"${values}"`,
+    course_name: `"${courseSchemaName}"`,
+  };
 
   const RResponse = await openCpu('termometro', 'make_prediction/json', param);
-  // return response.json()[0];
-  return { codigo_curso, media_set, cra, distinctClasses };
+  console.log('RResponse', { RResponse });
+  return RResponse[0];
 }

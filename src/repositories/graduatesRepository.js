@@ -1,5 +1,5 @@
-import { buildQuery } from '../database/queryBuilder';
-import { client } from '../database';
+import { buildQuery } from '../databases/queryBuilder';
+import { client } from '../databases';
 
 export async function findByCourseName(courseSchemaName) {
   const command = `

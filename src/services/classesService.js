@@ -9,11 +9,11 @@ export async function findClassesByCourseName(courseName) {
 
   const [classes, prerequisites] = await Promise.all([classesPromise, prerequisitesPromise]);
 
-  const sortedObj = buildClassesWithPrerequisitesObject(classes, prerequisites);
+  const sortedObj = buildObjectClassesWithPrerequisites(classes, prerequisites);
   return sortedObj;
 }
 
-function buildClassesWithPrerequisitesObject(classes, prerequisites) {
+function buildObjectClassesWithPrerequisites(classes, prerequisites) {
   const classesMap = new Map(
     classes.map((c) => [
       c.codigo_disciplina,

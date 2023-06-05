@@ -1,5 +1,5 @@
-import { client } from '../database';
-import { buildQuery } from '../database/queryBuilder';
+import { client } from '../databases';
+import { buildQuery } from '../databases/queryBuilder';
 
 export async function findClassesByCourseName(courseName) {
   const command = `SELECT # FROM ${courseName}.disciplinas`;
