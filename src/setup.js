@@ -13,6 +13,7 @@ const {
   DB_PASSWORD,
   R_SERVER_PORT,
   R_SERVER_URI,
+  NODE_ENV,
 } = env;
 
 export {
@@ -24,4 +25,5 @@ export {
   DB_PASSWORD,
   R_SERVER_PORT,
   R_SERVER_URI,
+  NODE_ENV,
 };

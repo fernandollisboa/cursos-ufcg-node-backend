@@ -9,8 +9,8 @@ export async function getNewCourse(courseName) {
   return coursesRepository.getNewCourse(courseName);
 }
 
-export async function verifyCourseExists({ name, isOld = false }) {
-  const course = { name, isOld };
+export async function verifyCourseExists(courseName) {
+  const course = { name: courseName };
   return coursesRepository.verifyCourseExists(course);
 }
 
@@ -72,8 +72,6 @@ export async function getCourseRecommendations(courseName, academicTranscript, c
     ...academicTranscript,
     ...choices,
   ]);
-
-  console.log('maxSemester', maxSemester);
 
   const historico = academicTranscript.join(',');
   const disciplinas = [...choices, ...notTaken].join(',');

@@ -10,7 +10,8 @@
     "lint": "eslint --fix src",
     "lint:check": "eslint src",
     "build": "npm run buisucrase src -d dist --transforms imports",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
+    "test:dev": "jest --watch --detectOpenHandles",
     "docker:build": "docker build -t cursos_api_node:latest -f ./docker/Dockerfile .",
     "docker:compose": "docker-compose -f ./docker/docker-compose.yml up",
     "docker:compose-build": "docker-compose -f ./docker/docker-compose.yml up --build",
@@ -30,11 +31,13 @@
     "redis": "^4.6.5"
   },
   "devDependencies": {
+    "@sucrase/jest-plugin": "^3.0.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "sucrase": "^3.31.0"
   }

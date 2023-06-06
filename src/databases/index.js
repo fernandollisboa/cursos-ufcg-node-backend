@@ -1,41 +1,61 @@
 import { RedisError } from 'redis';
-import redisClient from './redisClient';
-import odbcClient from './odbcClient';
+import RedisClient from './RedisClient';
+import OdbcClient from './OdbcClient';
+import { NODE_ENV } from '../setup';
 
-async function query({ queryString, singleRow = false }) {
-  try {
-    const cachedValue = await redisClient.getAndParse(queryString);
+class DatabaseClient {
+  constructor() {
+    let redisClient, odbcClient;
 
-    let result;
-    if (cachedValue) {
-      result = cachedValue;
+    if (NODE_ENV === 'test') {
+      odbcClient = null;
+      redisClient = null;
     } else {
-      result = await odbcClient.getFromDatabase(queryString);
-      redisClient.setAndStrigify(queryString, result);
+      odbcClient = new OdbcClient();
+      redisClient = new RedisClient();
+
+      if (!redisClient.isConnectionUp()) {
+        redisClient = null;
+      }
     }
+    this.redisClient = redisClient;
+    this.odbcClient = odbcClient;
+  }
 
-    return singleRow ? result.rows[0] : result;
-  } catch (err) {
-    let result;
-    const { odbcErrors } = err;
-
-    if (odbcErrors) {
-      console.error('Error querying database: ', { odbcErrors, queryString });
-      console.error('Returning empty result...');
-      result = { rows: [], count: 0 };
-      odbcClient.connect();
-      console.log(err);
-    } else if (err instanceof RedisError) {
-      console.error('Error querying Redis: ', { err, queryString });
-      console.error('Querying database instead...');
-      result = odbcClient.getFromDatabase(queryString);
+  async getFromCache(queryString) {
+    if (this.redisClient) {
+      const cachedValue = await this.redisClient.getAndParse(queryString);
+      return cachedValue ? cachedValue : null;
     }
+    return null;
+  }
 
-    return singleRow ? result.rows[0] : result;
+  async query({ queryString, singleRow = false }) {
+    try {
+      const cachedValue = await this.getFromCache(queryString);
+
+      let result;
+      if (cachedValue) {
+        result = cachedValue;
+      } else {
+        result = await this.odbcClient.getFromDatabase(queryString);
+        this.redisClient.setAndStrigify(queryString, result);
+      }
+
+      return singleRow ? result.rows[0] : result;
+    } catch (err) {
+      const { odbcErrors } = err;
+
+      let result;
+      if (odbcErrors) {
+        console.error('Error querying database: ', { odbcErrors, queryString });
+        result = { rows: [], count: 0 };
+      } else {
+        result = await this.odbcClient.getFromDatabase(queryString);
+      }
+
+      return singleRow ? result.rows[0] : result;
+    }
   }
 }
-
-const client = {
-  query,
-};
-export { client };
+export const client = new DatabaseClient();

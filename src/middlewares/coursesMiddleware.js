@@ -19,7 +19,7 @@ export function validateCourseName(req, res, next) {
 export async function verifyCourseExists(req, res, next) {
   const { courseName } = req.params;
 
-  const doesCourseExists = await coursesService.verifyCourseExists({ name: courseName });
+  const doesCourseExists = await coursesService.verifyCourseExists(courseName);
   if (!doesCourseExists)
     return res.status(httpStatusCode.NOT_FOUND).json({ message: 'Curso não encontrado' });
 

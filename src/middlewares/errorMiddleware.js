@@ -9,15 +9,14 @@ export default async function errorMiddleware(err, req, res, next) {
   if (err instanceof AxiosError) {
     const { response } = err;
     const { data } = response;
-    console.log('Axios Error:', data);
-    console.log('requestData:', response.config.data);
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json(data);
   }
-
   if (err instanceof BaseError) {
     const { statusCode, message } = err;
     return res.status(statusCode).json({ message });
   }
+
+  console.log(err);
 
   return res.sendStatus(httpStatusCode.INTERNAL_SERVER_ERROR);
 }
