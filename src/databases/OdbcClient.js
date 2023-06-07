@@ -5,20 +5,19 @@ import DatabaseError from '../errors/DatabaseError.js';
 
 const BIG_INT_DATA_CODE = -5;
 const MAX_RETRY_ATTEMPS = 3;
-const RETRY_DELAY = [200, 400, 800];
-
-const connectionString = `DRIVER={${DB_DRIVER}}; SERVER=${DB_SERVER}; PORT=${DB_PORT}; DATABASE=${DB_NAME}; UID=${DB_USER}; PWD=${DB_PASSWORD}; CHARSET=UTF8;`;
+const RETRY_DELAY_MS = [200, 400, 800];
 
 export default class ObdcClient {
   constructor() {
+    this.connectionString = `DRIVER={${DB_DRIVER}}; SERVER=${DB_SERVER}; PORT=${DB_PORT}; DATABASE=${DB_NAME}; UID=${DB_USER}; PWD=${DB_PASSWORD}; CHARSET=UTF8;`;
     this.connect();
   }
 
   connect() {
-    odbc.pool(connectionString, (err, pool) => {
+    odbc.pool(this.connectionString, (err, pool) => {
       if (err) {
         console.error('Error connecting to the database:', err);
-        setTimeout(() => this.retryConnection(), Math.min(RETRY_DELAY));
+        setTimeout(() => this.retryConnection(), Math.min(RETRY_DELAY_MS));
       } else {
         console.log('ODBC Client Connected');
         this.pool = pool;
@@ -40,14 +39,14 @@ export default class ObdcClient {
         break;
       } catch (err) {
         retryCount++;
-        console.error(`Error executing query (Attempt ${retryCount}):`, err);
+        console.error(`Error executing OBDC query (Attempt ${retryCount}):`, err);
         this.retryConnection();
 
         if (retryCount === MAX_RETRY_ATTEMPS) {
           throw new DatabaseError(retryCount);
         }
 
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY[retryCount]));
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS[retryCount]));
       }
     }
     return result;

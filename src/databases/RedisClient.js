@@ -5,12 +5,14 @@ const EXPIRATION_TIME_MS = 10;
 export default class RedisClient {
   constructor() {
     const socket = { host: REDIS_HOST || 'localhost', port: 6379 };
+    this.isConnected = false;
     try {
-      this.isConnected = false;
       this.client = createClient({ socket });
       this.connect();
       this.client.on('connect', () => {
-        console.log('Redis Client connected');
+        this.isConnected = true;
+        console.log('Redis Client Connected');
+        console.log(this.isConnected);
       });
     } catch (err) {
       console.error(err);
@@ -19,7 +21,6 @@ export default class RedisClient {
 
   connect() {
     this.client.connect();
-    this.isConnected = true;
   }
 
   isConnectionUp() {
@@ -28,22 +29,28 @@ export default class RedisClient {
 
   async getAndParse(queryString) {
     try {
-      const cachedValue = await this.client.get(queryString);
+      let result = null;
 
-      if (!cachedValue || Object.getOwnPropertyNames(cachedValue).length === 0) {
-        return null;
+      const cachedValue = await this.client.get(queryString);
+      if (cachedValue && cachedValue.length !== 0) {
+        result = JSON.parse(cachedValue);
       }
-      return JSON.parse(cachedValue);
+
+      return result;
     } catch (err) {
-      console.error(err);
-      this.client.del(queryString);
+      console.error('Error executing Redis query ', err);
+      await this.client.del(queryString);
       return null;
     }
   }
 
-  setAndStrigify(queryString, result) {
-    const stringifiedResult = JSON.stringify(result);
-    this.client.setEx(queryString, EXPIRATION_TIME_MS, stringifiedResult);
+  async setAndStrigify(queryString, value) {
+    const stringifiedValue = JSON.stringify(value);
+    await this.client.setEx(queryString, EXPIRATION_TIME_MS, stringifiedValue);
+  }
+
+  async cacheValue(queryString, value) {
+    await this.setAndStrigify(queryString, value);
   }
 
   delete(key) {

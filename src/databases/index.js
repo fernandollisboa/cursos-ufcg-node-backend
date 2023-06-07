@@ -1,33 +1,25 @@
-import { RedisError } from 'redis';
 import RedisClient from './RedisClient';
 import OdbcClient from './OdbcClient';
 import { NODE_ENV } from '../setup';
 
 class DatabaseClient {
   constructor() {
-    let redisClient, odbcClient;
-
     if (NODE_ENV === 'test') {
-      odbcClient = null;
-      redisClient = null;
+      this.odbcClient = null;
+      this.redisClient = null;
     } else {
-      odbcClient = new OdbcClient();
-      redisClient = new RedisClient();
-
-      if (!redisClient.isConnectionUp()) {
-        redisClient = null;
-      }
+      this.odbcClient = new OdbcClient();
+      this.createRedisClientAsync();
     }
-    this.redisClient = redisClient;
-    this.odbcClient = odbcClient;
   }
 
   async getFromCache(queryString) {
+    let result = null;
     if (this.redisClient) {
       const cachedValue = await this.redisClient.getAndParse(queryString);
-      return cachedValue ? cachedValue : null;
+      result = cachedValue;
     }
-    return null;
+    return result;
   }
 
   async query({ queryString, singleRow = false }) {
@@ -39,9 +31,8 @@ class DatabaseClient {
         result = cachedValue;
       } else {
         result = await this.odbcClient.getFromDatabase(queryString);
-        this.redisClient.setAndStrigify(queryString, result);
+        await this.redisClient.cacheValue(queryString, result);
       }
-
       return singleRow ? result.rows[0] : result;
     } catch (err) {
       const { odbcErrors } = err;
@@ -55,6 +46,17 @@ class DatabaseClient {
       }
 
       return singleRow ? result.rows[0] : result;
+    }
+  }
+
+  async createRedisClientAsync() {
+    const redisClient = new RedisClient();
+    try {
+      await redisClient.client.ping();
+      this.redisClient = redisClient;
+    } catch (err) {
+      console.error('Error connecting to Redis: ', err);
+      this.redisClient = null;
     }
   }
 }
