@@ -15,12 +15,13 @@
     "docker:build": "docker build -t cursos_api_node:latest -f ./docker/Dockerfile .",
     "docker:compose": "docker-compose -f ./docker/docker-compose.yml up",
     "docker:compose-build": "docker-compose -f ./docker/docker-compose.yml up --build",
-    "docker:stop": "docker stop cursos_api_redis && docker stop cursos_api_node && docker stop cursos_redis",
+    "docker:stop": "docker stop cursos_api_redis && docker stop cursos_api_node",
     "redis": "docker run -p 6379:6379 --name cursos_redis -it --rm redis:alpine",
+    "redis:stop": "docker stop cursos_redis",
     "redis:run-detached": "docker run -p 6379:6379 --name cursos_redis -d --rm redis:alpine"
   },
   "author": "@fernandollisboa",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.4.0",
     "cors": "^2.8.5",

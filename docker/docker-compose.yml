@@ -4,7 +4,7 @@ services:
     container_name: cursos_api_redis
     image: redis:alpine
     networks:
-      - my-network  
+      - cursos-network
     ports:
       - '6379:6379'
   app:
@@ -15,11 +15,11 @@ services:
     environment:
       REDIS_HOST: redis
     ports:
-      - '3000:3000' 
+      - '3000:3000'
     depends_on:
       - redis
     networks:
-      - my-network
+      - cursos-network
 networks:
-  my-network:
+  cursos-network:
     driver: bridge
