@@ -14,6 +14,7 @@ const {
   R_SERVER_PORT,
   R_SERVER_URI,
   NODE_ENV,
+  REDIS_HOST,
 } = env;
 
 export {
@@ -26,4 +27,5 @@ export {
   R_SERVER_PORT,
   R_SERVER_URI,
   NODE_ENV,
+  REDIS_HOST,
 };

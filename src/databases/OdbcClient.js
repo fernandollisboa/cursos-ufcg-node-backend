@@ -5,20 +5,18 @@ import DatabaseError from '../errors/DatabaseError.js';
 
 const BIG_INT_DATA_CODE = -5;
 const MAX_RETRY_ATTEMPS = 3;
-const RETRY_DELAY = [200, 400, 800];
-
-const connectionString = `DRIVER={${DB_DRIVER}}; SERVER=${DB_SERVER}; PORT=${DB_PORT}; DATABASE=${DB_NAME}; UID=${DB_USER}; PWD=${DB_PASSWORD}; CHARSET=UTF8;`;
+const RETRY_DELAY_MS = [0, 200, 400, 800];
 
 export default class ObdcClient {
   constructor() {
+    this.connectionString = `DRIVER={${DB_DRIVER}}; SERVER=${DB_SERVER}; PORT=${DB_PORT}; DATABASE=${DB_NAME}; UID=${DB_USER}; PWD=${DB_PASSWORD}; CHARSET=UTF8;`;
     this.connect();
   }
 
   connect() {
-    odbc.pool(connectionString, (err, pool) => {
+    odbc.pool(this.connectionString, async (err, pool) => {
       if (err) {
-        console.error('Error connecting to the database:', err);
-        setTimeout(() => this.retryConnection(), Math.min(RETRY_DELAY));
+        console.error(`Error connecting to OBDC Client`, err);
       } else {
         console.log('ODBC Client Connected');
         this.pool = pool;
@@ -32,29 +30,27 @@ export default class ObdcClient {
   }
 
   async executeQueryWithRetry(queryString) {
-    let result;
     let retryCount = 0;
     while (retryCount < MAX_RETRY_ATTEMPS) {
       try {
-        result = await this.pool.query(queryString);
-        break;
+        const result = await this.pool.query(queryString);
+        return result;
       } catch (err) {
-        retryCount++;
-        console.error(`Error executing query (Attempt ${retryCount}):`, err);
-        this.retryConnection();
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS[retryCount]));
 
-        if (retryCount === MAX_RETRY_ATTEMPS) {
+        retryCount++;
+        this.retryConnection();
+        console.error(`Error executing OBDC query (Attempt ${retryCount}):`);
+        if (retryCount >= MAX_RETRY_ATTEMPS) {
+          console.error('Error executing OBDC query: Max retry attempts reached.', err);
           throw new DatabaseError(retryCount);
         }
-
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY[retryCount]));
       }
     }
-    return result;
   }
 
   async getFromDatabase(queryString) {
-    if (!this.pool) throw new DatabaseError(0, 'Database connection not established yet.');
+    if (!this.pool) throw new DatabaseError(0, 'Database Connection Error');
 
     const result = await this.executeQueryWithRetry(queryString);
     const { count, columns } = result;
