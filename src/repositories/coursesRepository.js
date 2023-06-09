@@ -60,11 +60,8 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
   return rows.length > 0 ? rows[0] : null;
 }
 
-export async function verifyCourseExists(course) {
-  const { name: courseName, isOld } = course;
-  const command = isOld // TODO remover se nao precisar traduzir o oldApi
-    ? `SELECT NomeSchema as schema FROM Curso WHERE NomeSchema = '${courseName}'`
-    : `SELECT c.schema FROM preanalytics2015.cursos AS c WHERE c.schema =  '${courseName}'`;
+export async function verifyCourseExists(courseName) {
+  const command = `SELECT c.schema FROM preanalytics2015.cursos AS c WHERE c.schema = '${courseName}'`;
   const queryString = buildQuery({ command });
 
   const { count } = await client.query({ queryString });

@@ -10,8 +10,7 @@ export async function getNewCourse(courseName) {
 }
 
 export async function verifyCourseExists(courseName) {
-  const course = { name: courseName };
-  return coursesRepository.verifyCourseExists(course);
+  return coursesRepository.verifyCourseExists(courseName);
 }
 
 export async function getSuccessRate(courseName) {
@@ -73,14 +72,14 @@ export async function getCourseRecommendations(courseName, academicTranscript, c
     ...choices,
   ]);
 
-  const historico = academicTranscript.join(',');
-  const disciplinas = [...choices, ...notTaken].join(',');
+  const transcript = academicTranscript.join(',');
+  const courses = [...choices, ...notTaken].join(',');
 
   const param = {
-    historico_: `c(${historico})`,
-    disciplinas: `c(${disciplinas})`,
+    historico_: `c(${transcript})`,
+    disciplinas: `c(${courses})`,
     course_name: `"${courseName}"`,
-    p: Number(maxSemester).toPrecision(3),
+    p: maxSemester,
   };
 
   const data = await openCpu('recomendacao', 'recomenda/json', param); //TODO
