@@ -14,11 +14,11 @@ export async function getCourseAnalysis(courseSchemaName, academicTranscript, cl
     courseSchemaName,
     classesChosen,
   });
-  // const enrollmentProbability = await getEnrollmentProbability({
-  //   courseSchemaName,
-  //   classesChosen,
-  //   academicTranscript,
-  // });
+  const enrollmentProbability = await getEnrollmentProbability({
+    courseSchemaName,
+    classesChosen,
+    academicTranscript,
+  });
 
   const failingRisk = await getClassesFailingRisk({ courseSchemaName, classesChosen });
 
@@ -26,5 +26,6 @@ export async function getCourseAnalysis(courseSchemaName, academicTranscript, cl
     taxa_complecao: completionPercentage,
     frequencia_matricula: enrollmentFrequency,
     risco_reprovacao: failingRisk,
+    probabilidade_matricula: enrollmentProbability,
   };
 }

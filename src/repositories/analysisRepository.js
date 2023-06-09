@@ -18,7 +18,7 @@ export async function getCourseCompletionPercentageByTranscpript({
   const { qtd_disciplinas: classesTotalCount } = rows[0];
 
   const percentageCompleted = academicTranscript.length / classesTotalCount;
-  return percentageCompleted;
+  return parseFloat(percentageCompleted); // TODO sera que precisa desse parseFLoat mermo?
 }
 
 export async function getEnrollmentFrequency({ courseSchemaName, classesChosen }) {
@@ -69,7 +69,6 @@ export async function getEnrollmentProbability({
   };
 
   const response = await openCpu('redes', 'pegar_prob_da_rede/print', param);
-  console.log('eae rapaz');
   return parseFloat(response.split(' ')[1]);
 }
 
@@ -106,6 +105,5 @@ export async function getClassesFailingRisk({ courseSchemaName, classesChosen })
   };
 
   const RResponse = await openCpu('termometro', 'make_prediction/json', param);
-  console.log('RResponse', { RResponse });
   return RResponse[0];
 }

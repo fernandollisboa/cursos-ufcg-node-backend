@@ -10,11 +10,6 @@ export default async function errorMiddleware(err, req, res, next) {
     const { statusCode, message } = err;
     return res.status(statusCode).json({ message });
   }
-  if (err instanceof AxiosError) {
-    const { response } = err;
-    const { data } = response;
-    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json(data);
-  }
 
   return res.sendStatus(httpStatusCode.INTERNAL_SERVER_ERROR);
 }
