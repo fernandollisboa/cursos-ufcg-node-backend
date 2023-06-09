@@ -1,3 +1,4 @@
+//eslint-disable-next-line no-undef
 module.exports = {
   transform: {
     '^.+\\.(js)$': ['@sucrase/jest-plugin'],
@@ -10,6 +11,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['clover', 'text', 'lcov'],
   coverageThreshold: {
-    './src/services': { branches: 50, functions: 50, lines: 50, statements: 50 },
+    './src/services': { branches: 90, functions: 100, lines: 90, statements: 90 },
   },
 };
