@@ -1,11 +1,10 @@
-/* eslint-disable no-param-reassign */
 import odbc from 'odbc';
 import { DB_DRIVER, DB_SERVER, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } from '../setup.js';
 import DatabaseError from '../errors/DatabaseError.js';
 
 const BIG_INT_DATA_CODE = -5;
 const MAX_RETRY_ATTEMPS = 3;
-const RETRY_DELAY_MS = [0, 200, 400, 800];
+const RETRY_DELAY_MS = [200, 400, 800];
 
 export default class ObdcClient {
   constructor() {
@@ -17,6 +16,7 @@ export default class ObdcClient {
     odbc.pool(this.connectionString, async (err, pool) => {
       if (err) {
         console.error(`Error connecting to OBDC Client`, err);
+        this.pool = null;
       } else {
         console.log('ODBC Client Connected');
         this.pool = pool;
@@ -25,7 +25,6 @@ export default class ObdcClient {
   }
 
   retryConnection() {
-    this.pool = null;
     this.connect();
   }
 
@@ -36,11 +35,11 @@ export default class ObdcClient {
         const result = await this.pool.query(queryString);
         return result;
       } catch (err) {
+        this.retryConnection();
         await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS[retryCount]));
 
         retryCount++;
-        this.retryConnection();
-        console.error(`Error executing OBDC query (Attempt ${retryCount}):`);
+        console.error(`Error executing OBDC query (Attempt ${retryCount})`);
         if (retryCount >= MAX_RETRY_ATTEMPS) {
           console.error('Error executing OBDC query: Max retry attempts reached.', err);
           throw new DatabaseError(retryCount);

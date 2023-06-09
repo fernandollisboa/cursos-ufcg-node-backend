@@ -1,9 +1,10 @@
-/* eslint-disable no-undef */
+/* eslint-disable*/
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const { env } = process;
+
 const {
   DB_DRIVER,
   DB_SERVER,
@@ -15,6 +16,9 @@ const {
   R_SERVER_URI,
   NODE_ENV,
   REDIS_HOST,
+  REDIS_PORT,
+  DEFAULT_SCHEMA,
+  REDIS_CACHE_EXPIRATION_TIME_MS,
 } = env;
 
 export {
@@ -28,4 +32,7 @@ export {
   R_SERVER_URI,
   NODE_ENV,
   REDIS_HOST,
+  REDIS_PORT,
+  DEFAULT_SCHEMA,
+  REDIS_CACHE_EXPIRATION_TIME_MS,
 };

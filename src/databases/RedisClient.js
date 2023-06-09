@@ -1,17 +1,25 @@
 import { createClient } from 'redis';
-import { REDIS_HOST } from '../setup';
+import { REDIS_HOST, REDIS_PORT } from '../setup';
 
-const REDIS_CACHE_EXPIRATION_TIME_MS = 10;
-const MAX_RETRY_ATTEMPS = 3;
+const MAX_RETRY_ATTEMPS = 5;
 
 export default class RedisClient {
-  constructor() {
-    const socket = { host: REDIS_HOST || 'localhost', port: 6379 };
+  constructor(cacheExpirationTimeMs) {
+    this.expirationTimeMs = cacheExpirationTimeMs || 1000 * 60 * 60 * 24 * 7; // 7 days
     this.isConnected = false;
+
+    const socket = { host: REDIS_HOST, port: REDIS_PORT || 6379 };
     try {
       this.client = createClient({ socket });
-      (async () => this.connect())();
+      this.connect();
+      this.createClientEvents();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
+  createClientEvents() {
+    try {
       this.client.on('ready', () => {
         this.isConnected = true;
         console.log('Redis Client Connected');
@@ -23,7 +31,7 @@ export default class RedisClient {
         console.error(`Redis Client Error (Attempt ${connectionErrorCount})`);
         if (connectionErrorCount >= MAX_RETRY_ATTEMPS) {
           console.error('Redis Client Error: Max retry attempts reached.', err);
-          this.client.disconnect();
+          await this.disconnect();
         }
       });
     } catch (err) {
@@ -31,8 +39,12 @@ export default class RedisClient {
     }
   }
 
-  connect() {
-    this.client.connect();
+  async connect() {
+    await this.client.connect();
+  }
+
+  async disconnect() {
+    await this.client.disconnect();
   }
 
   isConnectionUp() {
@@ -51,21 +63,21 @@ export default class RedisClient {
       return result;
     } catch (err) {
       console.error('Error executing Redis query ', err);
-      await this.client.del(queryString);
+      await this.delete(queryString);
       return null;
     }
   }
 
   async setAndStrigify(queryString, value) {
     const stringifiedValue = JSON.stringify(value);
-    await this.client.setEx(queryString, REDIS_CACHE_EXPIRATION_TIME_MS, stringifiedValue);
+    await this.client.setEx(queryString, this.expirationTimeMs, stringifiedValue);
   }
 
   async cacheValue(queryString, value) {
     await this.setAndStrigify(queryString, value);
   }
 
-  delete(key) {
-    this.client.del(key);
+  async delete(key) {
+    await this.client.del(key);
   }
 }

@@ -1,6 +1,6 @@
 import RedisClient from './RedisClient';
 import OdbcClient from './OdbcClient';
-import { NODE_ENV } from '../setup';
+import { NODE_ENV, REDIS_CACHE_EXPIRATION_TIME_MS } from '../setup';
 
 class DatabaseClient {
   constructor() {
@@ -9,7 +9,7 @@ class DatabaseClient {
       this.redisClient = null;
     } else {
       this.odbcClient = new OdbcClient();
-      this.createRedisClientAsync();
+      this.createRedisClientAsync(REDIS_CACHE_EXPIRATION_TIME_MS);
     }
   }
 
@@ -31,7 +31,7 @@ class DatabaseClient {
         result = cachedValue;
       } else {
         result = await this.odbcClient.getFromDatabase(queryString);
-        this.redisClient.cacheValue(queryString, result);
+        await this.redisClient.cacheValue(queryString, result);
       }
       return singleRow ? result.rows[0] : result;
     } catch (err) {
@@ -49,13 +49,15 @@ class DatabaseClient {
     }
   }
 
-  async createRedisClientAsync() {
-    const redisClient = new RedisClient();
+  async createRedisClientAsync(cacheExpirationTimeMs) {
+    const redisClient = new RedisClient(cacheExpirationTimeMs);
     try {
       await redisClient.client.ping();
       this.redisClient = redisClient;
     } catch (err) {
-      console.log('Failed to Connect to Redis Client');
+      console.log(
+        'Failed to Connect to Redis\n' + '!-> Running without cache, using only ODBC Client'
+      );
       this.redisClient = null;
     }
   }
