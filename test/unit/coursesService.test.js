@@ -37,10 +37,4 @@ describe('coursesService', () => {
     await coursesService.getCourseSuccessRateMaxAndMinSemester(params);
     expect(spy).toHaveBeenCalledWith(params);
   });
-  it('should call getCourseCorrelations', async () => {
-    //const spy = jest.spyOn(coursesRepository, 'getCourseCorrelations');
-    //const params = 'name';
-    //await coursesService.getCourseCorrelations(params);
-    //expect(spy).toHaveBeenCalledWith(params);
-  });
 });
