@@ -1,8 +1,8 @@
 import * as classesRepository from '../repositories/classesRepository';
 import * as coursesRepository from '../repositories/coursesRepository';
 
-export async function findClassesByCourseName(courseName) {
-  const classesPromise = classesRepository.findClassesByCourseName(courseName);
+export async function getAllClassesByCourseName(courseName) {
+  const classesPromise = classesRepository.getAllClassesByCourseName(courseName);
 
   const prerequisitesPromise = coursesRepository.getCoursePrerequisites(courseName);
   //TODO verificar se prerequisitos existem mesmo? ele retorna [] se nao existir

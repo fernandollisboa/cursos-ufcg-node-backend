@@ -51,7 +51,7 @@ export async function getEnrollmentProbability({
   classesChosen,
   academicTranscript,
 }) {
-  // Cursos válidos para o cálculo da probabilidade de matrícula
+  // Cursos válidos para o cálculo da probabilidade de matrícula //TODO traduzir pra ingles?
   const validCoursesSchemas = ['engenharia_eletrica_cg', 'ciencia_da_computacao_d_cg'];
   if (!validCoursesSchemas.includes(courseSchemaName)) {
     return null;

@@ -1,7 +1,8 @@
 import { buildQuery } from '../databases/queryBuilder';
 import { client } from '../databases';
 
-export async function findByCourseName(courseSchemaName) {
+export async function getByCourseName(courseSchemaName) {
+  // TODO rever essa query feaia
   const command = `
     SELECT table_a.periodo, ingressos, IFNULL(formandos, 0) formandos 
     FROM (

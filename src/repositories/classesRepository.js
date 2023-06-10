@@ -1,7 +1,7 @@
 import { client } from '../databases';
 import { buildQuery } from '../databases/queryBuilder';
 
-export async function findClassesByCourseName(courseName) {
+export async function getAllClassesByCourseName(courseName) {
   const command = `SELECT # FROM ${courseName}.disciplinas`;
   const columns = [
     'codigo_disciplina',

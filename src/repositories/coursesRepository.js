@@ -84,7 +84,7 @@ export async function getMaxCourseSemesterFindByClassesIds(courseSchemaName, cla
 export async function getCourseCode(courseSchemaName) {
   const command = `SELECT codigo_curso FROM preanalytics2015.cursos WHERE schema = $1`;
   const values = [courseSchemaName];
-  const columns = ['codigo_curso'];
+  const columns = ['codigo_curso']; // TODO tirar isso daqui
   const queryString = buildQuery({ command, values });
   const { rows } = await client.query({ queryString });
 

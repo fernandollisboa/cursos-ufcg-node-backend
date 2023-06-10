@@ -5,7 +5,7 @@ export async function getByCourseName(courseSchemaName) {
   const courseFailings = await getCourseFailingsGroupByFailingTypeId(courseSchemaName);
   const courseSuccessRatePercent = (await getCourseSucessRate(courseSchemaName)) * 100;
 
-  const [activeStudentsFailings, graduatedStudentsFailings] = courseFailings;
+  const [activeStudentsFailings, graduatedStudentsFailings] = courseFailings; //TODO: nao ficou mutio claro isso aqui
 
   return {
     regulares: activeStudentsFailings.quant,

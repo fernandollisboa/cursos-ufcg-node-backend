@@ -4,6 +4,7 @@ import {
   getEnrollmentProbability,
   getClassesFailingRisk,
 } from '../repositories/analysisRepository';
+// TODO mudar para get * from analysisrepositorurueur
 
 export async function getCourseAnalysis(courseSchemaName, academicTranscript, classesChosen) {
   const completionPercentage = await getCourseCompletionPercentageByTranscpript({
