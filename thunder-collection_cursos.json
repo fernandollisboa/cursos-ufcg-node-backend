@@ -1,0 +1,826 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "cursos",
+    "dateExported": "2023-06-12T05:28:27.112Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "ee9d8f3f-5585-4b86-a2fa-65bd41212530",
+            "name": "cursos_2015",
+            "containerId": "",
+            "created": "2023-04-13T05:29:58.525Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "c2a6b7f1-c7ae-43c6-91a1-58aebae0f6ea",
+            "name": "curso",
+            "containerId": "",
+            "created": "2023-04-20T00:12:45.113Z",
+            "sortNum": 15000
+        },
+        {
+            "_id": "dc8d0fae-c168-4d51-8ae7-6f053804d02a",
+            "name": "disciplinas",
+            "containerId": "",
+            "created": "2023-04-20T00:24:21.414Z",
+            "sortNum": 17500
+        },
+        {
+            "_id": "39d374a4-7705-4cf1-afd7-c668e97df15a",
+            "name": "recomendacao",
+            "containerId": "",
+            "created": "2023-04-20T01:36:14.562Z",
+            "sortNum": 27500
+        },
+        {
+            "_id": "745e5bd9-deb6-4802-860e-d6121f6f1c99",
+            "name": "fomandos",
+            "containerId": "",
+            "created": "2023-04-19T22:42:04.787Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "240c486a-0330-4794-90e1-42e2f4d19cee",
+            "name": "estatisticas",
+            "containerId": "",
+            "created": "2023-04-19T23:04:35.680Z",
+            "sortNum": 50000
+        },
+        {
+            "_id": "1ce8e789-1489-4318-ba83-30bc8ac6ea53",
+            "name": "taxa-sucesso",
+            "containerId": "",
+            "created": "2023-04-20T00:42:43.652Z",
+            "sortNum": 62500
+        },
+        {
+            "_id": "b8cbd9c4-14ef-4e64-96fe-865cf858e179",
+            "name": "taxa-sucesso/periodos",
+            "containerId": "",
+            "created": "2023-04-20T00:53:28.264Z",
+            "sortNum": 75000
+        },
+        {
+            "_id": "55c06ed2-ba5d-4de6-b6a0-5c17d0e7178e",
+            "name": "analise",
+            "containerId": "",
+            "created": "2023-04-19T04:21:23.323Z",
+            "sortNum": 85000
+        },
+        {
+            "_id": "a0ce4f28-c133-403d-b3dc-b902d890645f",
+            "name": "correlacao",
+            "containerId": "",
+            "created": "2023-04-20T01:23:35.418Z",
+            "sortNum": 95000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "c8c48cfd-866e-41a8-8106-545a027f0e2c",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "ee9d8f3f-5585-4b86-a2fa-65bd41212530",
+            "name": "getAll",
+            "url": "{{baseUrl}}/cursos_2015",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-04-13T05:30:05.161Z",
+            "modified": "2023-05-14T03:29:45.742Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "b20e8582-732e-460f-b523-bf174ea4491e",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "55c06ed2-ba5d-4de6-b6a0-5c17d0e7178e",
+            "name": "getAdministracao",
+            "url": "{{baseUrl}}/administracao_n_cg/analise?escolhas=%5B1301001%2C1301005%2C1303001%2C1109083%5D&historico=%5B%5D",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-04-19T04:29:40.891Z",
+            "modified": "2023-06-09T05:44:59.660Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "escolhas",
+                    "value": "%5B1301001%2C1301005%2C1303001%2C1109083%5D",
+                    "isPath": false
+                },
+                {
+                    "name": "historico",
+                    "value": "%5B%5D",
+                    "isPath": false
+                }
+            ],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.taxa_complecao",
+                    "action": "equal",
+                    "value": "0"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.frequencia_matricula",
+                    "action": "equal",
+                    "value": "429"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.probabilidade_matricula",
+                    "action": "equal",
+                    "value": "null"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.risco_reprovacao",
+                    "action": "equal",
+                    "value": "-1"
+                }
+            ]
+        },
+        {
+            "_id": "51840ca3-1ba5-487e-8c58-925b94d48ecf",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "55c06ed2-ba5d-4de6-b6a0-5c17d0e7178e",
+            "name": "getComputacao",
+            "url": "{{baseUrl}}/ciencia_da_computacao_d_cg/analise?escolhas=%5B1305218%2C1108089%2C1109053%2C1109113%2C1411168%2C1411170%2C1411181%5D&historico=%5B1307151%2C1109103%2C1109035%2C1411167%2C1411174%2C1411180%5D",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-04-19T04:31:53.427Z",
+            "modified": "2023-06-09T05:27:25.157Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "escolhas",
+                    "value": "%5B1305218%2C1108089%2C1109053%2C1109113%2C1411168%2C1411170%2C1411181%5D",
+                    "isPath": false
+                },
+                {
+                    "name": "historico",
+                    "value": "%5B1307151%2C1109103%2C1109035%2C1411167%2C1411174%2C1411180%5D",
+                    "isPath": false
+                }
+            ],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.taxa_complecao",
+                    "action": "equal",
+                    "value": "0.125"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.frequencia_matricula",
+                    "action": "equal",
+                    "value": "40"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.risco_reprovacao",
+                    "action": "equal",
+                    "value": "2"
+                }
+            ]
+        },
+        {
+            "_id": "ec05b879-72eb-4e38-835c-ed6c68d0d31b",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "55c06ed2-ba5d-4de6-b6a0-5c17d0e7178e",
+            "name": "getArteEMidia",
+            "url": "{{baseUrl}}/arte_e_midia_d_cg/analise?escolhas=%5B1307147%2C1305027%5D&historico=%5B1307145%2C1302056%2C1302057%2C1302058%2C1302061%2C1302066%5D",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2023-04-19T05:56:54.244Z",
+            "modified": "2023-04-20T01:35:42.673Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "escolhas",
+                    "value": "%5B1307147%2C1305027%5D",
+                    "isPath": false
+                },
+                {
+                    "name": "historico",
+                    "value": "%5B1307145%2C1302056%2C1302057%2C1302058%2C1302061%2C1302066%5D",
+                    "isPath": false
+                }
+            ],
+            "tests": [
+                {
+                    "type": "json-query",
+                    "custom": "json.taxa_complecao",
+                    "action": "equal",
+                    "value": "0.15384615384615385"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.frequencia_matricula",
+                    "action": "equal",
+                    "value": "3"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.risco_reprovacao",
+                    "action": "equal",
+                    "value": "1"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.probabilidade_matricula",
+                    "action": "equal",
+                    "value": "null"
+                }
+            ]
+        },
+        {
+            "_id": "194cfd6d-f5a5-4bf4-b410-c5573f3ceb11",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "745e5bd9-deb6-4802-860e-d6121f6f1c99",
+            "name": "getFomandosEletrica",
+            "url": "{{baseUrl}}/engenharia_eletrica_cg/formandos",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2023-04-19T22:42:15.647Z",
+            "modified": "2023-04-20T02:14:01.803Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].periodo",
+                    "action": "equal",
+                    "value": "1972.1"
+                }
+            ]
+        },
+        {
+            "_id": "efd60bbb-8880-4671-be50-837a8ec9a084",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "745e5bd9-deb6-4802-860e-d6121f6f1c99",
+            "name": "getFormandosPsicologia",
+            "url": "{{baseUrl}}/psicologia_n_cg/formandos",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2023-04-19T22:42:39.978Z",
+            "modified": "2023-04-20T02:13:32.038Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].periodo",
+                    "action": "equal",
+                    "value": "2010.1"
+                }
+            ]
+        },
+        {
+            "_id": "940b7187-429b-4d5c-8dea-4d33bd7ae9df",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "745e5bd9-deb6-4802-860e-d6121f6f1c99",
+            "name": "getFormandosComputacao",
+            "url": "{{baseUrl}}/ciencia_da_computacao_d_cg/formandos",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2023-04-19T22:44:09.543Z",
+            "modified": "2023-04-20T02:12:51.971Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].periodo",
+                    "action": "equal",
+                    "value": "1979.2"
+                }
+            ]
+        },
+        {
+            "_id": "214d5134-e4ad-4faa-9f29-08e148c757de",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "240c486a-0330-4794-90e1-42e2f4d19cee",
+            "name": "getEstatisticasPsicologia",
+            "url": "{{baseUrl}}/psicologia_n_cg/estatisticas",
+            "method": "GET",
+            "sortNum": 140000,
+            "created": "2023-04-19T23:04:54.656Z",
+            "modified": "2023-04-19T23:09:30.151Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.regulares",
+                    "action": "equal",
+                    "value": "296"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.graduados",
+                    "action": "equal",
+                    "value": "49"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.taxa_de_aprovacao",
+                    "action": "equal",
+                    "value": "90.91"
+                }
+            ]
+        },
+        {
+            "_id": "d8de58f2-f689-468a-91a1-c9756ad8221d",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "240c486a-0330-4794-90e1-42e2f4d19cee",
+            "name": "getEstatisticasAdministracao",
+            "url": "{{baseUrl}}/administracao_n_cg/estatisticas",
+            "method": "GET",
+            "sortNum": 160000,
+            "created": "2023-04-19T23:05:45.752Z",
+            "modified": "2023-04-20T00:09:10.712Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.regulares",
+                    "action": "equal",
+                    "value": "152"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.graduados",
+                    "action": "equal",
+                    "value": "115"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.taxa_de_aprovacao",
+                    "action": "equal",
+                    "value": "77.89"
+                }
+            ]
+        },
+        {
+            "_id": "f204fc84-4fab-4df0-a8ec-31a058d8e1aa",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "c2a6b7f1-c7ae-43c6-91a1-58aebae0f6ea",
+            "name": "getComputacaoD ",
+            "url": "{{baseUrl}}/ciencia_da_computacao_d_cg",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2023-04-20T00:13:05.061Z",
+            "modified": "2023-04-20T00:28:30.963Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.codigo_curso",
+                    "action": "equal",
+                    "value": "14102100"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.nome_comum",
+                    "action": "equal",
+                    "value": "Ciência da Computação - D"
+                }
+            ]
+        },
+        {
+            "_id": "9f59f6e5-f4ff-4271-a291-bfcf9d972a00",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "c2a6b7f1-c7ae-43c6-91a1-58aebae0f6ea",
+            "name": "getComputacaoI (curso novo)",
+            "url": "{{baseUrl}}/ciencia_da_computacao_i_cg",
+            "method": "GET",
+            "sortNum": 175000,
+            "created": "2023-04-20T00:25:00.535Z",
+            "modified": "2023-04-20T00:29:59.276Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.codigo_curso",
+                    "action": "equal",
+                    "value": "14102101"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.nome_comum",
+                    "action": "equal",
+                    "value": "Ciencia da Computacao - I"
+                }
+            ]
+        },
+        {
+            "_id": "240e9839-09e7-4833-b4f8-9adb38a7e0b3",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "c2a6b7f1-c7ae-43c6-91a1-58aebae0f6ea",
+            "name": "getPsicologia (curso novo)",
+            "url": "{{baseUrl}}/psicologia_n_cg",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2023-04-20T00:13:29.874Z",
+            "modified": "2023-04-20T00:21:19.376Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.codigo_curso",
+                    "action": "equal",
+                    "value": "12208200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.nome_comum",
+                    "action": "equal",
+                    "value": "Psicologia - N"
+                }
+            ]
+        },
+        {
+            "_id": "945f6137-6731-42a4-af1a-a777bb696b0c",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "dc8d0fae-c168-4d51-8ae7-6f053804d02a",
+            "name": "getDisciplinasComputacao",
+            "url": "{{baseUrl}}/ciencia_da_computacao_i_cg/disciplinas",
+            "method": "GET",
+            "sortNum": 190000,
+            "created": "2023-04-20T00:24:35.793Z",
+            "modified": "2023-04-20T00:34:46.366Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].codigo_disciplina",
+                    "action": "equal",
+                    "value": "1"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].disciplina",
+                    "action": "equal",
+                    "value": "Fundamentos de Matemática para Ciência da Computação I"
+                }
+            ]
+        },
+        {
+            "_id": "07a952ea-2ccc-4838-805e-cfba47996a52",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "dc8d0fae-c168-4d51-8ae7-6f053804d02a",
+            "name": "getDisciplinasPsicologia",
+            "url": "{{baseUrl}}/psicologia_n_cg/disciplinas",
+            "method": "GET",
+            "sortNum": 210000,
+            "created": "2023-04-20T00:41:00.150Z",
+            "modified": "2023-04-20T00:42:14.860Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].codigo_disciplina",
+                    "action": "equal",
+                    "value": "1205147"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].disciplina",
+                    "action": "equal",
+                    "value": "História da Psicologia"
+                }
+            ]
+        },
+        {
+            "_id": "569e8d39-7fc3-47f2-a80e-11d21382b1f8",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "1ce8e789-1489-4318-ba83-30bc8ac6ea53",
+            "name": "getSuccessRatePsicologia",
+            "url": "{{baseUrl}}/psicologia_n_cg/taxa-sucesso",
+            "method": "GET",
+            "sortNum": 230000,
+            "created": "2023-04-20T00:49:25.129Z",
+            "modified": "2023-04-20T00:52:59.640Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].codigo_disciplina",
+                    "action": "equal",
+                    "value": "1205147"
+                }
+            ]
+        },
+        {
+            "_id": "de81c460-5e23-4316-b260-753b344db105",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "1ce8e789-1489-4318-ba83-30bc8ac6ea53",
+            "name": "getSuccessRateComputacaoI",
+            "url": "{{baseUrl}}/ciencia_da_computacao_i_cg/taxa-sucesso",
+            "method": "GET",
+            "sortNum": 240000,
+            "created": "2023-04-20T00:46:50.802Z",
+            "modified": "2023-04-20T00:53:40.916Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json",
+                    "action": "equal",
+                    "value": "[]"
+                }
+            ]
+        },
+        {
+            "_id": "edd480d8-3f4a-46a9-8be5-f55d90ef6d07",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "b8cbd9c4-14ef-4e64-96fe-865cf858e179",
+            "name": "getSuccessRatePsicologiaBySemester",
+            "url": "{{baseUrl}}/psicologia_n_cg/taxa-sucesso/periodos",
+            "method": "GET",
+            "sortNum": 250000,
+            "created": "2023-04-20T00:54:53.718Z",
+            "modified": "2023-04-20T00:57:17.655Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.min_periodo",
+                    "action": "equal",
+                    "value": "2010.1"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.max_periodo",
+                    "action": "equal",
+                    "value": "2016.2"
+                }
+            ]
+        },
+        {
+            "_id": "16ecf7d9-334a-4aaf-b965-48e06dbf132c",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "b8cbd9c4-14ef-4e64-96fe-865cf858e179",
+            "name": "getSuccessRateComputcaoIBySemester",
+            "url": "{{baseUrl}}/ciencia_da_computacao_i_cg/taxa-sucesso/periodos",
+            "method": "GET",
+            "sortNum": 260000,
+            "created": "2023-04-20T00:55:42.144Z",
+            "modified": "2023-04-20T01:02:13.793Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.min_periodo",
+                    "action": "equal",
+                    "value": "null"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.max_periodo",
+                    "action": "equal",
+                    "value": "null"
+                }
+            ]
+        },
+        {
+            "_id": "fc408045-a4a8-4f97-b63a-2682649dcb50",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "a0ce4f28-c133-403d-b3dc-b902d890645f",
+            "name": "getCorrelationComputacao",
+            "url": "{{baseUrl}}/ciencia_da_computacao_d_cg/correlacao",
+            "method": "GET",
+            "sortNum": 260000,
+            "created": "2023-04-20T01:23:55.745Z",
+            "modified": "2023-04-20T01:28:44.269Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.disciplinas[0].periodo",
+                    "action": "equal",
+                    "value": "4"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.disciplinas[0].nome",
+                    "action": "equal",
+                    "value": "Lógica Matemática"
+                }
+            ]
+        },
+        {
+            "_id": "fb5ea800-4edd-40ea-8f9e-506794ce2f8a",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "39d374a4-7705-4cf1-afd7-c668e97df15a",
+            "name": "getRecommendationsEletrica",
+            "url": "{{baseUrl}}/engenharia_eletrica_cg/recomendacao?disciplinas=%5B1404164%2C1404162%2C1404135%2C1404136%2C1301014%2C1404127%5D&historico=%5B1109103%2C1109035%2C1113019%2C1108030%2C1503038%2C1411160%2C1404132%2C1108081%2C1108023%2C1109049%2C1109053%2C1411161%2C1108084%2C1108083%2C1109106%2C1411075%2C1404137%2C1404139%2C1404138%2C1404140%2C1404225%5D&nao_cursei=%5B1107212%2C1404163%2C1108098%2C1109105%2C1114107%2C1404144%2C1404147%2C1305212%2C1404158%2C1303021%2C1305036%2C1404204%5D",
+            "method": "GET",
+            "sortNum": 270000,
+            "created": "2023-04-20T01:36:28.821Z",
+            "modified": "2023-06-05T02:36:47.978Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "disciplinas",
+                    "value": "%5B1404164%2C1404162%2C1404135%2C1404136%2C1301014%2C1404127%5D",
+                    "isPath": false
+                },
+                {
+                    "name": "historico",
+                    "value": "%5B1109103%2C1109035%2C1113019%2C1108030%2C1503038%2C1411160%2C1404132%2C1108081%2C1108023%2C1109049%2C1109053%2C1411161%2C1108084%2C1108083%2C1109106%2C1411075%2C1404137%2C1404139%2C1404138%2C1404140%2C1404225%5D",
+                    "isPath": false
+                },
+                {
+                    "name": "nao_cursei",
+                    "value": "%5B1107212%2C1404163%2C1108098%2C1109105%2C1114107%2C1404144%2C1404147%2C1305212%2C1404158%2C1303021%2C1305036%2C1404204%5D",
+                    "isPath": false
+                }
+            ],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].probabilidade",
+                    "action": "equal",
+                    "value": "1"
+                }
+            ]
+        },
+        {
+            "_id": "344633cd-9bc8-4a84-8c51-0d22e832fc2b",
+            "colId": "81d10cf0-7123-4f50-96f8-f568383899dd",
+            "containerId": "39d374a4-7705-4cf1-afd7-c668e97df15a",
+            "name": "getRecommendationsComputacao",
+            "url": "{{baseUrl}}/ciencia_da_computacao_d_cg/recomendacao?disciplinas=[1305218]&historico=[1307151,1109103,1109035,1411167,1411174,1411180]&nao_cursei=[1108089,1109053,1109113,1411168,1411170,1411181,1109049,1411176,1411179,1305220,1305219]",
+            "method": "GET",
+            "sortNum": 275000,
+            "created": "2023-04-20T01:53:28.636Z",
+            "modified": "2023-06-05T02:27:04.274Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "disciplinas",
+                    "value": "[1305218]",
+                    "isPath": false
+                },
+                {
+                    "name": "historico",
+                    "value": "[1307151,1109103,1109035,1411167,1411174,1411180]",
+                    "isPath": false
+                },
+                {
+                    "name": "nao_cursei",
+                    "value": "[1108089,1109053,1109113,1411168,1411170,1411181,1109049,1411176,1411179,1305220,1305219]",
+                    "isPath": false
+                }
+            ],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json[0].probabilidade",
+                    "action": ">",
+                    "value": "0.45"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.[0].probabilidade",
+                    "action": "<",
+                    "value": "0.55"
+                }
+            ]
+        }
+    ]
+}
