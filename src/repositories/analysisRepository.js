@@ -1,9 +1,7 @@
 import { client } from '../databases';
 import { buildQuery } from '../databases/queryBuilder';
-import openCpu from '../utils/openCpu';
-import { getMaxCourseSemesterFindByClassesIds } from './coursesRepository';
 
-export async function getCourseCompletionPercentageByTranscpript({
+export async function getCourseCompletionPercentageByAcademicTranscript({
   courseSchemaName,
   academicTranscript,
 }) {
@@ -46,64 +44,4 @@ export async function getEnrollmentFrequency({ courseSchemaName, classesChosen }
   return frequency ? frequency : 0;
 }
 
-export async function getEnrollmentProbability({
-  courseSchemaName,
-  classesChosen,
-  academicTranscript,
-}) {
-  // Cursos válidos para o cálculo da probabilidade de matrícula //TODO traduzir pra ingles?
-  const validCoursesSchemas = ['engenharia_eletrica_cg', 'ciencia_da_computacao_d_cg'];
-  if (!validCoursesSchemas.includes(courseSchemaName)) {
-    return null;
-  }
-  const { maxSemester } = await getMaxCourseSemesterFindByClassesIds(
-    courseSchemaName,
-    classesChosen
-  );
-
-  const param = {
-    historico_: `c(${academicTranscript.toString()})`,
-    matricula_atual_: `c(${classesChosen.toString()})`,
-    course_name: `"${courseSchemaName}"`,
-    p: maxSemester,
-  };
-
-  const response = await openCpu('redes', 'pegar_prob_da_rede/print', param);
-  return parseFloat(response.split(' ')[1]);
-}
-
 // TODO isso ta feio d+++ e deveria nao estar aqui em repository e sim um R services
-export async function getClassesFailingRisk({ courseSchemaName, classesChosen }) {
-  const command1 = `SELECT codigo_curso FROM preanalytics2015.cursos WHERE \`schema\` = '${courseSchemaName}'`;
-  const { codigo_curso } = await client.query({ queryString: command1, singleRow: true });
-
-  const command2 = `SELECT DISTINCT(codigo_disciplina) FROM preanalytics2015.disciplinas WHERE codigo_curso = ${codigo_curso}`;
-  const { rows: distinctClasses } = await client.query({ queryString: command2 });
-
-  const command3 = `SELECT AVG(media) AS cra FROM ${courseSchemaName}.historico`;
-  const { cra } = await client.query({ queryString: command3, singleRow: true });
-
-  // const placeholders = classesChosen.map((_, i) => '$' + (i + 1)).join(',');
-  const command4 = `SELECT AVG(media) AS media_set FROM ${courseSchemaName}.historico WHERE codigo_disciplina IN (${classesChosen})`;
-  const { media_set } = await client.query({ queryString: command4, singleRow: true });
-
-  const classesCodes = distinctClasses.map(({ codigo_disciplina }) => codigo_disciplina);
-  const { length: n_disc } = classesChosen;
-
-  const names = [...classesCodes, 'n_disc', 'media_set', 'cra'].join(',');
-  const values = [
-    ...classesCodes.map((d) => (classesChosen.includes(d) ? 'TRUE' : 'FALSE')),
-    n_disc,
-    media_set,
-    cra,
-  ].join(',');
-
-  const param = {
-    names: `"${names}"`,
-    values: `"${values}"`,
-    course_name: `"${courseSchemaName}"`,
-  };
-
-  const RResponse = await openCpu('termometro', 'make_prediction/json', param);
-  return RResponse[0];
-}

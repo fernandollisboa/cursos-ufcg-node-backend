@@ -1,8 +1,9 @@
 import { client } from '../databases';
 import { buildQuery } from '../databases/queryBuilder';
+import { DB_DEFAULT_SCHEMA } from '../setup';
 
 export async function findAllNewCourses() {
-  const command = 'SELECT # FROM preanalytics2015.cursos WHERE disponivel IS TRUE';
+  const command = `SELECT # FROM ${DB_DEFAULT_SCHEMA}.cursos WHERE disponivel IS TRUE`;
   const columns = ['schema', 'campus', 'nome_comum'];
   const queryString = buildQuery({ command, columns });
 
@@ -12,7 +13,7 @@ export async function findAllNewCourses() {
 
 export async function getNewCourse(courseSchemaName) {
   // TODO tirar esse nome de schema
-  const command = `SELECT # FROM preanalytics2015.cursos AS c WHERE c.schema = '${courseSchemaName}'`;
+  const command = `SELECT # FROM ${DB_DEFAULT_SCHEMA}.cursos AS c WHERE c.schema = '${courseSchemaName}'`;
   const columns = [
     'codigo_curso',
     'curso',
@@ -61,7 +62,7 @@ export async function getCourseSuccessRateMaxAndMinSemester(courseName) {
 }
 
 export async function verifyCourseExists(courseName) {
-  const command = `SELECT c.schema FROM preanalytics2015.cursos AS c WHERE c.schema = '${courseName}'`;
+  const command = `SELECT c.schema FROM ${DB_DEFAULT_SCHEMA}.cursos AS c WHERE c.schema = '${courseName}'`;
   const queryString = buildQuery({ command });
 
   const { count } = await client.query({ queryString });
@@ -69,24 +70,39 @@ export async function verifyCourseExists(courseName) {
 }
 
 export async function getMaxCourseSemesterFindByClassesIds(courseSchemaName, classIds) {
-  // TODO capitalizar
-  const command = `select MAX(semestre) AS max_semester from ${courseSchemaName}.disciplinas where codigo_disciplina in (${[
+  const command = `SELECT MAX(semestre) AS max_semester FROM ${courseSchemaName}.disciplinas WHERE codigo_disciplina IN (${[
     ...classIds,
   ].join(', ')})`;
-  const columns = ['periodo'];
-  const queryString = buildQuery({ command, columns });
+  const queryString = buildQuery({ command });
 
   const { max_semester } = await client.query({ queryString, singleRow: true });
 
   return { maxSemester: max_semester };
 }
 
-export async function getCourseCode(courseSchemaName) {
-  const command = `SELECT codigo_curso FROM preanalytics2015.cursos WHERE schema = $1`;
+export async function getCourseCodeByCourseName(courseSchemaName) {
+  const command = `SELECT codigo_curso FROM ${DB_DEFAULT_SCHEMA}.cursos AS c WHERE c.schema = '${courseSchemaName}'`;
   const values = [courseSchemaName];
-  const columns = ['codigo_curso']; // TODO tirar isso daqui
   const queryString = buildQuery({ command, values });
   const { rows } = await client.query({ queryString });
 
   return rows[0]['codigo_curso'];
+}
+
+export async function getCourseHistoricalAverageByCourseName(courseSchemaName) {
+  const command = `SELECT AVG(media) AS cra FROM ${courseSchemaName}.historico`;
+  const { cra } = await client.query({ queryString: command, singleRow: true });
+  return cra;
+}
+
+export async function getCourseHistoricalAverageFromClassesCodesByCourseName(
+  classesCodes,
+  courseSchemaName
+) {
+  const command = `SELECT AVG(media) AS media_set FROM ${courseSchemaName}.historico WHERE codigo_disciplina IN (${classesCodes})`;
+  const { media_set: historicalAverageSet } = await client.query({
+    queryString: command,
+    singleRow: true,
+  });
+  return historicalAverageSet;
 }

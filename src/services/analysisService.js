@@ -1,27 +1,30 @@
 import {
-  getCourseCompletionPercentageByTranscpript,
+  getCourseCompletionPercentageByAcademicTranscript,
   getEnrollmentFrequency,
-  getEnrollmentProbability,
-  getClassesFailingRisk,
 } from '../repositories/analysisRepository';
-// TODO mudar para get * from analysisrepositorurueur
+import { getEnrollmentProbability, getClassesFailureRisk } from './openCpuService';
 
 export async function getCourseAnalysis(courseSchemaName, academicTranscript, classesChosen) {
-  const completionPercentage = await getCourseCompletionPercentageByTranscpript({
+  const completionPercentage = await getCourseCompletionPercentageByAcademicTranscript({
     courseSchemaName,
     academicTranscript,
   });
+
   const enrollmentFrequency = await getEnrollmentFrequency({
     courseSchemaName,
     classesChosen,
   });
+
   const enrollmentProbability = await getEnrollmentProbability({
     courseSchemaName,
     classesChosen,
     academicTranscript,
   });
 
-  const failingRisk = await getClassesFailingRisk({ courseSchemaName, classesChosen });
+  const failingRisk = await getClassesFailureRisk({
+    courseSchemaName,
+    classesChosen,
+  });
 
   return {
     taxa_complecao: completionPercentage,

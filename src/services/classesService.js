@@ -3,9 +3,7 @@ import * as coursesRepository from '../repositories/coursesRepository';
 
 export async function getAllClassesByCourseName(courseName) {
   const classesPromise = classesRepository.getAllClassesByCourseName(courseName);
-
   const prerequisitesPromise = coursesRepository.getCoursePrerequisites(courseName);
-  //TODO verificar se prerequisitos existem mesmo? ele retorna [] se nao existir
 
   const [classes, prerequisites] = await Promise.all([classesPromise, prerequisitesPromise]);
 

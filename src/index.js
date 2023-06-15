@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import app from './app.js';
-import { API_PORT } from './setup.js';
+import { API_PORT } from './setup';
 
 const port = API_PORT || 3000;
 

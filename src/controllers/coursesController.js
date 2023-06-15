@@ -1,4 +1,5 @@
 import * as coursesService from '../services/coursesService';
+import * as openCpuService from '../services/openCpuService';
 import httpStatusCode from '../enum/httpStatusCode';
 
 export async function getAllNewCourses(req, res, next) {
@@ -47,8 +48,7 @@ export async function getCourseSuccessRateMaxAndMinSemester(req, res, next) {
 export async function getCourseCorrelations(req, res, next) {
   const { courseName } = req.params;
   try {
-    const courseCorrelations = await coursesService.getCourseCorrelations(courseName);
-    console.log('courseCorrelations', courseCorrelations);
+    const courseCorrelations = await openCpuService.getCourseCorrelations(courseName);
 
     return res.status(httpStatusCode.OK).json(courseCorrelations);
   } catch (err) {

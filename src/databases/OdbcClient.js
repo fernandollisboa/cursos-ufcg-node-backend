@@ -1,5 +1,5 @@
 import odbc from 'odbc';
-import { DB_DRIVER, DB_SERVER, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } from '../setup.js';
+import { DB_DRIVER, DB_SERVER, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } from '../setup';
 import DatabaseError from '../errors/DatabaseError.js';
 
 const BIG_INT_DATA_CODE = -5;

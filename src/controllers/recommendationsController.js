@@ -1,4 +1,4 @@
-import { getCourseRecommendations } from '../services/coursesService';
+import { getCourseRecommendations } from '../services/openCpuService';
 import httpStatusCode from '../enum/httpStatusCode';
 
 export async function getRecommendations(req, res, next) {
