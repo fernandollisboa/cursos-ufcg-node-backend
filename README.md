@@ -11,7 +11,7 @@ Before running the application, make sure you have the following prerequisites i
 - Node.js (version 12 or higher)
 - Docker (optional - for running Redis and/or the server in a container)
 
-To install the dependencies, run the following command:
+To install dependencies:
 
 ```bash
 npm install
